@@ -3,76 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CASH-NET - Earn Money</title>
+<title>CASH-NET</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 body{background:#0f172a;color:#fff;text-align:center;padding:10px}
-.card{background:#1e293b;padding:14px;border-radius:14px;margin:10px auto;max-width:420px;box-shadow:0 4px 15px rgba(0,0,0,.4)}
-.btn{padding:12px;border:none;border-radius:10px;font-weight:bold;width:95%;margin:5px 0;cursor:pointer}
-.btn-gold{background:linear-gradient(45deg,#f59e0b,#fbbf24);color:#000}
+.card{background:#1e293b;padding:14px;border-radius:14px;margin:10px auto;max-width:420px}
+.btn{padding:13px;border:none;border-radius:10px;font-weight:bold;width:95%;margin:6px 0;cursor:pointer;font-size:16px}
+.btn-gold{background:#fbbf24;color:#000}
 .btn-green{background:#25D366;color:#fff}
 .btn-dark{background:#334155;color:#fff}
-.btn-red{background:#ef4444;color:#fff}
-input{padding:12px;border-radius:10px;width:95%;margin:6px;background:#0f172a;color:#fff;border:1px solid #334155}
+input{padding:14px;border-radius:10px;width:95%;margin:6px;background:#000;color:#fff;border:1px solid #555;font-size:16px}
 #timer{font-size:42px;font-weight:900;color:#fbbf24}
-#wheel{width:200px;height:200px;border-radius:50%;border:8px solid #fbbf24;margin:15px auto;position:relative;background:conic-gradient(#f59e0b 0 60deg,#22c55e 60deg 120deg,#ef4444 120deg 180deg,#3b82f6 180deg 240deg,#a855f7 240deg 300deg,#fbbf24 300deg 360deg);display:flex;align-items:center;justify-content:center;transition:transform 3s cubic-bezier(.17,.67,.12,.99)}
-#wheel span{font-size:40px}
-#offlineBox{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f172a;z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column}
-.tabs{display:flex;gap:5px;margin:10px 0}
+#wheel{width:190px;height:190px;border-radius:50%;border:8px solid #fbbf24;margin:15px auto;display:flex;align-items:center;justify-content:center;background:conic-gradient(#f59e0b 0 60deg,#22c55e 60deg 120deg,#ef4444 120deg 180deg,#3b82f6 180deg 240deg,#a855f7 240deg 300deg,#fbbf24 300deg 360deg);transition:transform 3s}
+.tabs{display:flex;gap:5px}
 .tab{flex:1;padding:10px;border-radius:8px;background:#334155;color:#fff;border:none;font-weight:bold}
-.tab.active{background:#f59e0b;color:#000}
-.wallet{background:linear-gradient(45deg,#0f172a,#1e293b);border:2px solid #fbbf24}
+.tab.active{background:#fbbf24;color:#000}
 </style>
 </head>
 <body>
-<div id="offlineBox"><h1>📵 No Internet</h1><p>Connect data to continue</p><button class="btn btn-gold" onclick="location.reload()">Retry</button></div>
-
 <h1 id="logo">💰 CASH-NET</h1>
-<p style="font-size:10px;color:#94a3b8">Tap logo 5x for Admin</p>
+<p style="font-size:10px;color:#888">Tap logo 5x for Admin</p>
 
-<div class="card" style="background:#fff;color:#000;padding:6px"><div style="background:#fbbf24;padding:8px;border-radius:8px;font-weight:bold;font-size:12px">AD: Pay MK500 to 0985675470 / 0885801081 - Earn Daily!</div></div>
-
-<div class="card" id="loginBox"><input id="phone" placeholder="Phone e.g 0985675470"><button class="btn btn-gold" onclick="login()">LOGIN</button></div>
+<div class="card" id="loginBox" style="display:block">
+<h3>Enter Phone to Login</h3>
+<input id="phoneInput" type="tel" placeholder="0985675470" autocomplete="off">
+<button class="btn btn-gold" id="loginBtn" type="button">LOGIN NOW</button>
+<p style="font-size:11px;margin-top:8px;color:#94a3b8">You get 50 free points</p>
+</div>
 
 <div id="mainArea" style="display:none;max-width:420px;margin:auto">
-<!-- WALLET TOP -->
-<div class="card wallet">
-<h3>💼 WALLET</h3>
-<h2 style="color:#fbbf24">MK <span id="walletBal">0</span></h2>
-<p>Points: <span id="pts">0</span> | 10pts = MK10</p>
-<p id="statusTxt" style="font-size:11px;color:#22c55e"></p>
-<button class="btn btn-green" onclick="withdrawWA()">💸 Withdraw via WhatsApp</button>
+<div class="card" style="border:2px solid #fbbf24">
+<h3>💼 WALLET: MK <span id="walletBal">0</span></h3>
+<p>Points: <span id="pts">0</span></p>
+<p id="statusTxt" style="font-size:11px"></p>
+<button class="btn btn-green" onclick="withdrawWA()">💸 Withdraw WhatsApp</button>
 <button class="btn btn-dark" onclick="convertPts()">Convert Points to MK</button>
 </div>
 
-<div class="tabs">
-<button class="tab active" onclick="showTab('quiz')">Quiz</button>
-<button class="tab" onclick="showTab('spin')">Spin</button>
-<button class="tab" onclick="showTab('more')">More</button>
+<div class="tabs" style="max-width:420px;margin:10px auto">
+<button class="tab active" onclick="showTab('quiz',this)">Quiz</button>
+<button class="tab" onclick="showTab('spin',this)">Spin</button>
+<button class="tab" onclick="showTab('more',this)">More</button>
 </div>
 
-<!-- QUIZ TAB -->
-<div class="card" id="tab-quiz">
-<div id="timer">10</div>
-<h3 id="qText"></h3>
-<div id="qOpts"></div>
-<p id="qRes" style="font-weight:bold;margin:6px"></p>
-</div>
-
-<!-- SPIN TAB -->
-<div class="card" id="tab-spin" style="display:none">
-<h3>🎡 SPIN & WIN</h3>
-<p style="font-size:12px">Spin costs 20pts - Win up to MK500</p>
-<div id="wheel"><span>🎯</span></div>
-<p id="spinRes" style="font-weight:bold;color:#fbbf24"></p>
-<button class="btn btn-gold" onclick="spin()">SPIN NOW (20pts)</button>
-<p style="font-size:10px">Daily free spin: <span id="freeSpinTxt">1 left</span></p>
-</div>
-
-<!-- MORE TAB -->
+<div class="card" id="tab-quiz"><div id="timer">10</div><h3 id="qText"></h3><div id="qOpts"></div><p id="qRes"></p></div>
+<div class="card" id="tab-spin" style="display:none"><div id="wheel">🎯</div><p id="spinRes"></p><button class="btn btn-gold" onclick="spin()">SPIN (20pts)</button><p id="freeSpinTxt"></p></div>
 <div class="card" id="tab-more" style="display:none">
-<button class="btn btn-gold" onclick="shareWA()">📤 Share Status (+20pts)</button>
-<button class="btn btn-green" onclick="inviteWA()">👥 Invite Friend (+50pts)</button>
-<button class="btn btn-dark" onclick="contactWA()">💬 Chat Admin</button>
+<button class="btn btn-gold" onclick="shareWA()">📤 Share (+20)</button>
+<button class="btn btn-green" onclick="inviteWA()">👥 Invite (+50)</button>
 <button class="btn btn-dark" onclick="payWA()">💰 Renew MK500</button>
-<p style="font-size:10px;word-break:break-all;margin-top:8px">Your Link: <span id="my
+<p style="word-break:break-all;font-size:10px">Link: <span id="myLink"></span></p>
+</div>
+</div>
+
+<div class="card" id="payBox" style="display:none"><h3>🔒 Expired - Pay MK500</h3><p>Airtel 0985675470<br>TNM 0885801081</p><button class="btn btn-green" onclick="payWA()">WhatsApp Proof</button></div>
+<div class="card" id="adminBox" style="display:none"><input id="adminPhone" placeholder="Phone"><button class="btn btn-green" onclick="adminAct()">Activate 3 Days</button><div id="userList"></div></div>
+
+<script>
+let users=JSON.parse(localStorage.getItem('cashnet_users')||'{}');
+let cur=localStorage.getItem('cashnet_current')||'';
+let siteLink=location.origin+location.pathname;
+let questions=[
+{q:"Capital of Malawi?",o:["Lilongwe","Blantyre"],a:0},
+{q:"2+2?",o:["4","3"],a:0},
+{q:"10x5?",o:["50","40"],a:0},
+{q:"1GB=?MB",o:["1024","1000"],a:0},
+{q:"CASH-NET fee?",o:["MK500","MK1000"],a:0},
+{q:"TNM code?",o:["*444#","*211#"],a:0},
+{q:"Airtel code?",o:["*211#","*444#"],a:0},
+{q:"28 districts?",o:["28","30"],a:0},
+{q:"100-50?",o:["50","100"],a:0},
+{q:"9x9?",o:["81","72"],a:0}
+];
+let qIndex=0,tInt=null,freeSpin=1;
+
+function loginNow(){
+ let input=document.getElementById('phoneInput');
+ let ph=input.value.trim();
+ console.log('Login click',ph);
+ if(!ph || ph.length<9){alert('Enter valid phone e.g 0985675470'); return;}
+ cur=ph;
+ localStorage.setItem('cashnet_current',ph);
+ if(!users[ph]) users[ph]={pts:50,balance:0,active:false,expiry:0};
+ // admin always active
+ if(ph==='0885801081'){users[ph].active=true;users[ph].expiry=Date.now()+7*24*60*60*1000;}
+ localStorage.setItem('cashnet_users',JSON.stringify(users));
+ document.getElementById('loginBox').style.display='none';
+ check();
+}
+
+document.getElementById('loginBtn').addEventListener('click', loginNow);
+document.getElementById('phoneInput').addEventListener('keydown', function(e){ if(e.key==='Enter') loginNow(); });
+
+let urlP=new URLSearchParams(location.search);
+let ap=urlP.get('activate'); if(ap){if(!users[ap])users[ap]={pts:50,balance:0};users[ap].active=true;users[ap].expiry=Date.now()+3*24*60*60*1000;localStorage.setItem('cashnet_users',JSON.stringify(users));localStorage.setItem('cashnet_current',ap);alert(ap+' Activated');history.replaceState({},'',location.pathname);}
+let ref=urlP.get('ref'); if(ref){if(!users[ref])users[ref]={pts:50,balance:0};users[ref].pts+=50;localStorage.setItem('cashnet_users',JSON.stringify(users));}
+
+function check(){
+ if(!cur){document.getElementById('loginBox').style.display='block'; return;}
+ document.getElementById('loginBox').style.display='none';
+ let u=users[cur];
+ if(!u){document.getElementById('loginBox').style.display='block'; return;}
+ let ok=u.active && u.expiry>Date.now() || cur==='0885801081';
+ if(ok){document.getElementById('mainArea').style.display='block'; updateUI(); startQ();}
+ else{document.getElementById('payBox').style.display='block';}
+}
+function updateUI(){let u=users[cur]; if(!u) return; document.getElementById('pts').innerText=u.pts||0; document.getElementById('walletBal').innerText=u.balance||0; document.getElementById('myLink').innerText=siteLink+'?ref='+cur; document.getElementById('statusTxt').innerText='Active till '+new Date(u.expiry).toLocaleDateString(); document.getElementById('freeSpinTxt').innerText=freeSpin+' free left';}
+function showTab(t,el){document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); document.getElementById('tab-quiz').style.display=t==='quiz'?'block':'none'; document.getElementById('tab-spin').style.display=t==='spin'?'block':'none'; document.getElementById('tab-more').style.display=t==='more'?'block':'none';}
+function startQ(){qIndex=0; showQ();}
+function showQ(){if(qIndex>=questions.length) qIndex=0; let qq=questions[qIndex]; document.getElementById('qText').innerText=(qIndex+1)+'. '+qq.q; let o=document.getElementById('qOpts'); o.innerHTML=''; qq.o.forEach((op,i)=>{let b=document.createElement('button');b.className='btn btn-dark';b.innerText=op;b.onclick=()=>ans(i);o.appendChild(b);}); let timeLeft=10; document.getElementById('timer').innerText=timeLeft; clearInterval(tInt); tInt=setInterval(()=>{timeLeft--; document.getElementById('timer').innerText=timeLeft; if(timeLeft<=0){clearInterval(tInt); qIndex++; showQ();}},1000);}
+function ans(i){clearInterval(tInt); let qq=questions[qIndex]; if(i===qq.a){users[cur].pts+=10; document.getElementById('qRes').innerText='✅ +10';}else{document.getElementById('qRes').innerText='❌ Wrong';} localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI(); qIndex++; setTimeout(()=>{document.getElementById('qRes').innerText=''; showQ();},700);}
+function spin(){let u=users[cur]; if(freeSpin<=0 && u.pts<20) return alert('Need 20pts'); if(freeSpin>0) freeSpin--; else u.pts-=20; let wheel=document.getElementById('wheel'); let deg=360*5+Math.random()*360; wheel.style.transform=`rotate(${deg}deg)`; setTimeout(()=>{let prizes=[0,10,20,50,100,500]; let p=prizes[Math.floor(Math.random()*prizes.length)]; if(p>0){u.balance+=p; document.getElementById('spinRes').innerText='Won MK'+p;}else{document.getElementById('spinRes').innerText='Try again';} localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI();},3000);}
+function convertPts(){let u=users[cur]; if(u.pts<10) return alert('Need 10pts'); let mk=Math.floor(u.pts/10)*10; u.pts-=mk; u.balance+=mk; localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI(); alert('Converted MK'+mk);}
+function withdrawWA(){let b=users[cur].balance||0; if(b<500) return alert('Min MK500 - You have MK'+b); window.open('https://wa.me/265885801081?text='+encodeURIComponent('Withdraw MK'+b+' CASH-NET '+cur));}
+function payWA(){window.open('https://wa.me/265885801081?text='+encodeURIComponent('Paid MK500 for '+cur));}
+function shareWA(){window.open('https://wa.me/?text='+encodeURIComponent('Earn CASH-NET: '+siteLink+'?ref='+cur)); users[cur].pts+=20; localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI();}
+function inviteWA(){window.open('https://wa.me/?text='+encodeURIComponent('Join CASH-NET: '+siteLink+'?ref='+cur));}
+let taps=0; document.getElementById('logo').addEventListener('click',()=>{taps++; if(taps>=5){let pin=prompt('Admin PIN'); if(pin==='0885801081'){document.getElementById('adminBox').style.display='block'; renderUsers();} taps=0;} setTimeout(()=>taps=0,2000);});
+function adminAct(){let ph=document.getElementById('adminPhone').value.trim(); if(!ph)return; if(!users[ph])users[ph]={pts:50,balance:0}; users[ph].active=true; users[ph].expiry=Date.now()+3*24*60*60*1000; localStorage.setItem('cashnet_users',JSON.stringify(users)); renderUsers();}
+function renderUsers(){let d=document.getElementById('userList'); d.innerHTML=''; let all=JSON.parse(localStorage.getItem('cashnet_users')||'{}'); users=all; for(let ph in all){let u=all[ph]; let act=u.active&&u.expiry>Date.now(); let el=document.createElement('div'); el.style=`background:#0f172a;padding:8px;margin:4px;border-left:4px solid ${act?'#22c55e':'#ef4444'};text-align:left`; el.innerHTML=`${ph} MK${u.balance||0} ${u.pts||0}pts ${act?'ACTIVE':'BLOCKED'}`; el.onclick=()=>{if(act){all[ph].active=false;}else{all[ph].active=true;all[ph].expiry=Date.now()+3*24*60*60*1000;} localStorage.setItem('cashnet_users',JSON.stringify(all)); renderUsers();}; d.appendChild(el);}}
+
+// auto login if already
+if(cur){document.getElementById('phoneInput').value=cur; check();}
+</script>
+</body>
+</html>
