@@ -3,164 +3,314 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CASH-NET PRO - WhatsApp Verify</title>
+<title>CASH-NET PRO 100Q + SPIN</title>
 <style>
 *{font-family:Arial;margin:0;padding:0;box-sizing:border-box}
 body{background:#0f172a;color:white;min-height:100vh}
-.header{background:#1e293b;padding:15px;text-align:center;border-bottom:3px solid #16a34a;position:sticky;top:0}
-.logo{font-size:26px;font-weight:800}
-.container{max-width:500px;margin:auto;padding:15px}
-.card{background:white;color:#0f172a;padding:20px;border-radius:16px;margin:12px 0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:linear-gradient(135deg,#16a34a,#15803d);color:white;padding:15px;border-radius:12px;text-align:center}
-.stat h2{font-size:22px}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;font-size:15px;margin:6px 0}
+.header{background:#1e293b;padding:12px;text-align:center;border-bottom:3px solid #16a34a;position:sticky;top:0;z-index:10}
+.logo{font-size:24px;font-weight:800}
+.container{max-width:520px;margin:auto;padding:12px}
+.card{background:white;color:#0f172a;padding:16px;border-radius:16px;margin:10px 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{color:white;padding:12px;border-radius:12px;text-align:center}
+.stat h2{font-size:20px}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-weight:800;font-size:14px;margin:5px 0}
 .btn-green{background:#16a34a;color:white}
 .btn-dark{background:#0f172a;color:white}
 .btn-wa{background:#25D366;color:white}
-input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0}
-.qbtn{background:#e2e8f0;color:#0f172a;padding:12px;margin:5px 0;border-radius:10px;width:100%;border:none;font-weight:600;text-align:left}
-.pending{background:#fef3c7;border:2px solid #f59e0b;padding:15px;border-radius:12px;text-align:center}
+.btn-gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:black}
+input,select{width:100%;padding:11px;border:1px solid #ddd;border-radius:10px;margin:5px 0}
+.qbtn{background:#e2e8f0;color:#0f172a;padding:12px;margin:4px 0;border-radius:10px;width:100%;border:none;font-weight:600;text-align:left;font-size:14px}
+.progress{height:8px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:8px 0}
+.progress-bar{height:100%;background:#16a34a;width:0%;transition:0.3s}
+.wheel-box{text-align:center}
+#wheel{width:200px;height:200px;border-radius:50%;border:6px solid #f59e0b;margin:10px auto;background:conic-gradient(#16a34a 0deg 60deg,#0ea5e9 60deg 120deg,#f59e0b 120deg 180deg,#8b5cf6 180deg 240deg,#ef4444 240deg 300deg,#10b981 300deg 360deg);transition:transform 3s cubic-bezier(0.2,0.8,0.2,1);position:relative}
+#wheel::after{content:'▲';position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:20px;color:#f59e0b}
+.pending{background:#fef3c7;border:2px solid #f59e0b;padding:12px;border-radius:12px;text-align:center}
 </style>
 </head>
 <body>
 <div class="header">
-<div class="logo" onclick="adminTap()">💰 CASH-NET <span style="background:#16a34a;padding:2px 8px;border-radius:20px;font-size:12px">PRO</span></div>
-<div id="balTop" style="font-size:12px;margin-top:4px">Balance MK0 | 0 Pts</div>
+<div class="logo" onclick="adminTap()">💰 CASH-NET <span style="background:#16a34a;padding:2px 8px;border-radius:12px;font-size:11px">100Q + SPIN</span></div>
+<div id="balTop" style="font-size:11px;margin-top:3px">MK0 | 0 Pts | Today 0/100</div>
 </div>
 <div class="container">
+
 <div class="stats">
-<div class="stat"><h2 id="sPoints">0</h2><p>POINTS</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#16a34a,#15803d)"><h2 id="sPoints">0</h2><p>POINTS</p></div>
 <div class="stat" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)"><h2 id="sBal">MK0</h2><p>BAL</p></div>
-<div class="stat" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><h2>MK2</h2><p>PER Q</p></div>
-<div class="stat" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)"><h2 id="sQ">0</h2><p>QUIZ</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><h2 id="sToday">0/100</h2><p>TODAY</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)"><h2 id="sLeft">100</h2><p>LEFT</p></div>
 </div>
 
+<!-- JOIN -->
 <div class="card" id="joinCard">
 <h2 style="text-align:center">🔓 Activate MK500</h2>
-<p style="text-align:center">Send <b>MK500</b> to<br><b style="color:#16a34a;font-size:22px">0885801081</b><br>Airtel - Favour Mateyu</p>
-<input id="inPhone" placeholder="Your Number (099...)">
-<input id="inTx" placeholder="Airtel Money Transaction ID e.g. PP123...">
-<p style="font-size:11px;color:#666;text-align:center">After sending money, copy Transaction ID from SMS and paste here</p>
-<button class="btn btn-wa" onclick="doPaidWhatsApp()">I PAID - Send Proof to Admin ✅</button>
+<p style="text-align:center">Send <b>MK500</b> to<br><b style="color:#16a34a;font-size:20px">0885801081</b><br>Airtel - Favour Mateyu</p>
+<input id="inPhone" placeholder="Your Number 099...">
+<input id="inTx" placeholder="Transaction ID e.g. PP123456">
+<button class="btn btn-wa" onclick="doPaidWA()">I PAID - Send Proof ✅</button>
 </div>
 
 <div class="card" id="pendingCard" style="display:none">
 <div class="pending">
-<h2>⏳ PENDING VERIFICATION</h2>
-<p style="margin:10px 0">We sent your payment proof to Admin <b>0885801081</b> on WhatsApp.<br><br>Admin will check Airtel Money and <b>send you activation link</b> within 5 mins!</p>
-<p id="pendingInfo" style="font-size:12px;background:white;padding:8px;border-radius:8px;margin:8px 0"></p>
-<button class="btn btn-wa" onclick="openWAagain()">Open WhatsApp Again</button>
-<button class="btn btn-dark" onclick="localStorage.clear();location.reload()">I want to change number</button>
+<h3>⏳ PENDING</h3>
+<p id="pendText" style="margin:8px 0;font-size:13px"></p>
+<button class="btn btn-wa" onclick="openWAgain()">Open WhatsApp Again</button>
+<button class="btn btn-dark" onclick="localStorage.clear();location.reload()">Change Number</button>
 </div>
 </div>
 
+<!-- SPIN -->
+<div class="card" id="spinCard" style="display:none">
+<div class="wheel-box">
+<h3>🎡 Daily Spin — Once a Day!</h3>
+<p style="font-size:12px">Win MK10 - MK100!</p>
+<div id="wheel"></div>
+<p id="spinStatus" style="font-size:12px;font-weight:bold;color:#16a34a;margin:6px">You have 1 spin today!</p>
+<button class="btn btn-gold" id="spinBtn" onclick="doSpin()">SPIN NOW 🎡</button>
+</div>
+</div>
+
+<!-- QUIZ -->
 <div class="card" id="quizCard" style="display:none">
-<h3 id="qTitle" style="margin:12px 0">Loading...</h3>
+<div style="display:flex;justify-content:space-between;font-size:11px"><span id="qNum">Q 1/100</span><span id="qTimer">100 LEFT</span></div>
+<div class="progress"><div class="progress-bar" id="pBar"></div></div>
+<h3 id="qTitle" style="margin:10px 0;font-size:16px">Loading...</h3>
 <div id="qOptions"></div>
+<div id="limitMsg" style="display:none;text-align:center;color:red;font-weight:bold"><h3>🎉 100/100 Done Today!</h3><p>Come tomorrow for 100 new questions + spin!</p></div>
 </div>
 
 <div class="card" id="wdCard" style="display:none">
-<h3>💸 Withdraw</h3>
+<h3>💸 Withdraw Min MK1000</h3>
 <select id="wdMethod"><option>Airtel Money</option><option>TNM Mpamba</option></select>
-<input id="wdNum" placeholder="Number to receive"><input id="wdAmt" type="number" placeholder="Amount e.g. 2000">
+<input id="wdNum" placeholder="Number to receive"><input id="wdAmt" type="number" placeholder="Amount">
 <button class="btn btn-dark" onclick="doWithdraw()">Request Withdraw</button>
 </div>
 
 <div class="card" id="adminBox" style="display:none;background:#1e293b;color:white;border:2px solid #f59e0b">
-<h2>👑 ADMIN - GENERATE ACTIVATION LINK</h2>
-<p style="font-size:12px;color:#f59e0b">To activate a user after you confirm MK500 in Airtel Money:</p>
-<input id="adminPhone" placeholder="User phone e.g. 0996504676">
+<h2>👑 ADMIN</h2>
+<input id="adminPhone" placeholder="User phone to activate e.g. 0996504676">
 <button class="btn" style="background:#25D366;color:white" onclick="genLink()">Generate Activation Link</button>
-<div id="genLinkOut" style="background:#0f172a;padding:10px;border-radius:8px;margin:10px 0;word-break:break-all;font-size:12px"></div>
-<button class="btn btn-dark" onclick="location.href=location.pathname">Exit</button>
-</div>
+<div id="genLinkOut" style="background:#0f172a;padding:8px;border-radius:8px;margin:8px 0;word-break:break-all;font-size:11px"></div>
+<div id="adminStats" style="font-size:12px;margin-top:8px"></div>
+<button class="btn btn-dark" onclick="location.href=location.pathname">Exit Admin</button>
 </div>
 
+</div>
 <script>
+// DATA
 let points=parseInt(localStorage.getItem('points')||0);
 let totalQ=parseInt(localStorage.getItem('totalQ')||0);
+let todayCount=parseInt(localStorage.getItem('todayCount')||0);
+let lastDate=localStorage.getItem('lastDate')||"";
+let today=new Date().toDateString();
+if(lastDate!==today){todayCount=0; localStorage.setItem('todayCount',0); localStorage.setItem('lastDate',today);}
+localStorage.setItem('lastDate',today);
 let activated=localStorage.getItem('activated')=="yes";
 let myPhone=localStorage.getItem('myPhone')||"";
 let pending=localStorage.getItem('pending')=="yes";
-let tap=0;
+let lastSpin=localStorage.getItem('lastSpin')||"";
+let tap=0; let qi=todayCount;
+
 let questions=[
-{q:"Capital of Malawi?",o:["Lilongwe","Blantyre"],c:0},{q:"Currency Malawi?",o:["Kwacha","Rand"],c:0},
-{q:"Lake in Malawi?",o:["Lake Malawi","Victoria"],c:0},{q:"Malawi independence?",o:["1964","1994"],c:0},{q:"2+2=?",o:["4","5"],c:0}
+{q:"Capital of Malawi?",o:["Lilongwe","Blantyre","Mzuzu"],c:0},
+{q:"Currency of Malawi?",o:["Kwacha","Dollar","Rand"],c:0},
+{q:"Lake in Malawi?",o:["Lake Malawi","Victoria","Chad"],c:0},
+{q:"Malawi independence year?",o:["1964","1960","1970"],c:0},
+{q:"How many regions in Malawi?",o:["3","4","5"],c:0},
+{q:"Largest city?",o:["Lilongwe","Zomba","Karonga"],c:0},
+{q:"President 2024?",o:["Chakwera","Mutharika","Banda"],c:0},
+{q:"First President?",o:["Hastings Banda","Bingu","Chakwera"],c:0},
+{q:"River in Malawi?",o:["Shire","Nile","Zambezi"],c:0},
+{q:"National Park?",o:["Liwonde","Serengeti","Kruger"],c:0},
+{q:"Flag colors?",o:["Black Red Green","Red White Blue","Green Yellow"],c:0},
+{q:"Language?",o:["Chichewa","Swahili","Zulu"],c:0},
+{q:"Malawi in which continent?",o:["Africa","Asia","Europe"],c:0},
+{q:"Capital of Zambia?",o:["Lusaka","Harare","Maputo"],c:0},
+{q:"Capital of Tanzania?",o:["Dodoma","Dar","Nairobi"],c:0},
+{q:"Capital of Mozambique?",o:["Maputo","Lusaka","Lilongwe"],c:0},
+{q:"Largest lake Africa?",o:["Victoria","Malawi","Tanganyika"],c:0},
+{q:"Longest river Africa?",o:["Nile","Shire","Congo"],c:0},
+{q:"Days in a week?",o:["7","6","5"],c:0},
+{q:"Months in year?",o:["12","10","11"],c:0},
+{q:"Sun rises from?",o:["East","West","North"],c:0},
+{q:"Water chemical?",o:["H2O","CO2","O2"],c:0},
+{q:"What do bees make?",o:["Honey","Milk","Oil"],c:0},
+{q:"Fastest animal?",o:["Cheetah","Lion","Elephant"],c:0},
+{q:"Largest animal?",o:["Blue Whale","Elephant","Lion"],c:0},
+{q:"Colors in rainbow?",o:["7","6","8"],c:0},
+{q:"Capital of USA?",o:["Washington","New York","Texas"],c:0},
+{q:"Capital of UK?",o:["London","Paris","Berlin"],c:0},
+{q:"Capital of China?",o:["Beijing","Shanghai","Tokyo"],c:0},
+{q:"Malawi team?",o:["Flames","Chipolopolo","Bafana"],c:0},
+{q:"Players in football?",o:["11","10","12"],c:0},
+{q:"World Cup 2022 winner?",o:["Argentina","France","Brazil"],c:0},
+{q:"Chichewa for water?",o:["Madzi","Moto","Dzuwa"],c:0},
+{q:"Chichewa for fire?",o:["Moto","Madzi","Nyumba"],c:0},
+{q:"Largest ocean?",o:["Pacific","Atlantic","Indian"],c:0},
+{q:"Smallest country?",o:["Vatican","Malawi","Lesotho"],c:0},
+{q:"Malawi landlocked?",o:["Yes","No"],c:0},
+{q:"Districts in Malawi?",o:["28","20","30"],c:0},
+{q:"Old capital Zomba was capital of?",o:["Malawi","Zambia","Mozambique"],c:0},
+{q:"Mzuzu in which region?",o:["North","South","Centre"],c:0},
+{q:"Blantyre in which region?",o:["South","North","Centre"],c:0},
+{q:"Fruit?",o:["Mango","Stone","Wood"],c:0},
+{q:"Vegetable?",o:["Cabbage","Mango","Apple"],c:0},
+{q:"Banana color?",o:["Yellow","Red","Blue"],c:0},
+{q:"Spider legs?",o:["8","6","4"],c:0},
+{q:"Bird?",o:["Eagle","Dog","Cat"],c:0},
+{q:"Gives milk?",o:["Cow","Dog","Chicken"],c:0},
+{q:"Capital of Kenya?",o:["Nairobi","Mombasa","Kisumu"],c:0},
+{q:"Kenya currency?",o:["Shilling","Kwacha","Rand"],c:0},
+{q:"Senses human has?",o:["5","6","4"],c:0},
+{q:"We breathe?",o:["Oxygen","Carbon","Water"],c:0},
+{q:"Blood color?",o:["Red","Blue","Green"],c:0},
+{q:"Biggest planet?",o:["Jupiter","Earth","Mars"],c:0},
+{q:"Closest to sun?",o:["Mercury","Venus","Earth"],c:0},
+{q:"Lake Malawi also called?",o:["Lake Nyasa","Victoria","Chad"],c:0},
+{q:"Not country?",o:["Lilongwe","Malawi","Zambia"],c:0},
+{q:"Flag has sun?",o:["Yes","No"],c:0},
+{q:"Alphabet letters?",o:["26","24","28"],c:0},
+{q:"Airtel color?",o:["Red","Blue","Green"],c:0},
+{q:"TNM color?",o:["Blue","Red","Yellow"],c:0},
+{q:"National bird?",o:["Fish Eagle","Parrot","Dove"],c:0},
+{q:"Chichewa for thank you?",o:["Zikomo","Muli bwanji","Moni"],c:0},
+{q:"Chichewa for hello?",o:["Moni","Zikomo","Pitani"],c:0},
+{q:"Famous food?",o:["Nsima","Rice","Bread"],c:0},
+{q:"Nsima from?",o:["Maize","Wheat","Rice"],c:0},
+{q:"Capital Nigeria?",o:["Abuja","Lagos","Kano"],c:0},
+{q:"Capital Egypt?",o:["Cairo","Alex","Giza"],c:0},
+{q:"2+2=?",o:["4","5","6"],c:0},
+{q:"10x10=?",o:["100","90","110"],c:0},
+{q:"20-5=?",o:["15","10","20"],c:0},
+{q:"3x7=?",o:["21","20","22"],c:0},
+{q:"9x9=?",o:["81","80","82"],c:0},
+{q:"100/10=?",o:["10","20","5"],c:0},
+{q:"50+50=?",o:["100","90","110"],c:0},
+{q:"8+12=?",o:["20","18","22"],c:0},
+{q:"15x2=?",o:["30","25","35"],c:0},
+{q:"100-1=?",o:["99","100","98"],c:0},
+{q:"12/3=?",o:["4","3","6"],c:0},
+{q:"6x6=?",o:["36","30","35"],c:0},
+{q:"7+8=?",o:["15","14","16"],c:0},
+{q:"25+25=?",o:["50","40","60"],c:0},
+{q:"60 sec =?",o:["1 minute","1 hour","1 day"],c:0},
+{q:"24 hours =?",o:["1 day","1 week","1 month"],c:0},
+{q:"365 days =?",o:["1 year","1 month","1 week"],c:0},
+{q:"11x11=?",o:["121","111","122"],c:0},
+{q:"5x5=?",o:["25","20","30"],c:0},
+{q:"1000/10=?",o:["100","10","1000"],c:0},
+{q:"1+1=?",o:["2","3","1"],c:0},
+{q:"10-10=?",o:["0","1","10"],c:0},
+{q:"Bones in human?",o:["206","100","300"],c:0},
+{q:"What is 9+9?",o:["18","19","20"],c:0},
+{q:"What is 100-50?",o:["50","60","40"],c:0},
+{q:"How many eyes human has?",o:["2","1","3"],c:0},
+{q:"What color is sky?",o:["Blue","Green","Red"],c:0},
+{q:"What is 2x6?",o:["12","10","14"],c:0},
+{q:"Malawi famous lakefish?",o:["Chambo","Shark","Whale"],c:0},
+{q:"Malawi currency symbol?",o:["MK","$","R"],c:0},
+{q:"Malawi driving side?",o:["Left","Right"],c:0},
+{q:"Malawi national anthem starts?",o:["Mulungu","God","Zikomo"],c:0},
+{q:"Lilongwe airport name?",o:["Kamuzu","Chileka","Mzuzu"],c:0},
+{q:"Blantyre airport?",o:["Chileka","Kamuzu","Karonga"],c:0}
 ];
-let qi=0;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
+shuffle(questions);
 
 function updateAll(){
  let bal=points*2;
- document.getElementById('balTop').innerText=`Balance MK${bal} | ${points} Pts`;
+ document.getElementById('balTop').innerText=`MK${bal} | ${points} Pts | Today ${todayCount}/100`;
  document.getElementById('sPoints').innerText=points;
  document.getElementById('sBal').innerText="MK"+bal;
- document.getElementById('sQ').innerText=totalQ;
+ document.getElementById('sToday').innerText=todayCount+"/100";
+ document.getElementById('sLeft').innerText=100-todayCount;
+ document.getElementById('pBar').style.width=(todayCount)+"%";
  if(activated){
   document.getElementById('joinCard').style.display='none';
   document.getElementById('pendingCard').style.display='none';
   document.getElementById('quizCard').style.display='block';
   document.getElementById('wdCard').style.display='block';
-  showQ();
+  document.getElementById('spinCard').style.display='block';
+  checkSpin();
+  if(todayCount>=100){
+   document.getElementById('qTitle').style.display='none';
+   document.getElementById('qOptions').style.display='none';
+   document.getElementById('limitMsg').style.display='block';
+   document.getElementById('qNum').innerText="100/100 DONE";
+   document.getElementById('qTimer').innerText="Come Tomorrow";
+  } else showQ();
  } else if(pending){
   document.getElementById('joinCard').style.display='none';
   document.getElementById('pendingCard').style.display='block';
-  document.getElementById('pendingInfo').innerText=`Phone: ${myPhone} | Tx: ${localStorage.getItem('myTx')}`;
+  document.getElementById('pendText').innerText=`Phone: ${myPhone} | Tx: ${localStorage.getItem('myTx')} - Wait Admin 0885801081`;
  }
 }
-// AUTO ACTIVATE via link ?activate=099...&key=FAVOUR500
+// ACTIVATION LINK
 let url=new URLSearchParams(window.location.search);
 let actPhone=url.get('activate');
 let actKey=url.get('key');
 if(actPhone && actKey=="FAVOUR500"){
- localStorage.setItem('activated','yes');
- localStorage.setItem('myPhone',actPhone);
- localStorage.setItem('pending','no');
- alert("✅ ACTIVATED by Admin! Welcome to CASH-NET PRO! Phone: "+actPhone);
- location.href=location.pathname;
+ localStorage.setItem('activated','yes'); localStorage.setItem('myPhone',actPhone); localStorage.setItem('pending','no');
+ alert("✅ ACTIVATED by Admin! "+actPhone); location.href=location.pathname;
 }
-function adminTap(){tap++; if(tap>=5){let pin=prompt("Admin PIN:"); if(pin=="0885801081"){document.getElementById('adminBox').style.display='block';} tap=0;}}
+if(url.get('admin')=="0885801081"){document.getElementById('adminBox').style.display='block';}
+
+function adminTap(){tap++; if(tap>=5){let pin=prompt("PIN:"); if(pin=="0885801081"){document.getElementById('adminBox').style.display='block'; let u=JSON.parse(localStorage.getItem('ALL_USERS')||"[]"); document.getElementById('adminStats').innerHTML=`Local Users: ${u.length}<br>Today: ${todayCount}/100`; } tap=0;}}
 function genLink(){
- let ph=document.getElementById('adminPhone').value;
- if(ph.length<9)return alert("Enter phone");
+ let ph=document.getElementById('adminPhone').value; if(ph.length<9)return alert("Enter phone");
  let link=`https://mateyufavour-source.github.io/CASH-NET/?activate=${ph}&key=FAVOUR500`;
- document.getElementById('genLinkOut').innerHTML=`✅ Send this to ${ph}:<br><br>${link}<br><br><button class='btn' style='background:#25D366;color:white' onclick="window.open('https://wa.me/${ph}?text=${encodeURIComponent('✅ Your CASH-NET payment MK500 confirmed! Click to activate: '+link)}')">Send via WhatsApp to ${ph}</button>`;
+ document.getElementById('genLinkOut').innerHTML=`Send to ${ph}:<br>${link}<br><br><button class='btn' style='background:#25D366;color:white' onclick="window.open('https://wa.me/${ph}?text=${encodeURIComponent('✅ Payment MK500 confirmed! Click to activate: '+link)}')">Send WhatsApp</button>`;
 }
-function doPaidWhatsApp(){
- let ph=document.getElementById('inPhone').value;
- let tx=document.getElementById('inTx').value;
- if(ph.length<9)return alert("Enter your phone");
- if(tx.length<4)return alert("Enter Transaction ID from Airtel Money SMS");
- localStorage.setItem('myPhone',ph);
- localStorage.setItem('myTx',tx);
- localStorage.setItem('pending','yes');
- let msg=`🔔 CASH-NET PAYMENT PROOF 🔔%0A%0APhone: ${ph}%0ATransaction ID: ${tx}%0AAmount: MK500%0A%0APlease check your Airtel Money 0885801081 and if received, activate me: https://mateyufavour-source.github.io/CASH-NET/?activate=${ph}%26key=FAVOUR500`;
- window.open(`https://wa.me/265885801081?text=${msg}`);
- setTimeout(()=>{location.reload();},1000);
+function doPaidWA(){
+ let ph=document.getElementById('inPhone').value; let tx=document.getElementById('inTx').value;
+ if(ph.length<9)return alert("Enter phone"); if(tx.length<3)return alert("Enter Transaction ID");
+ localStorage.setItem('myPhone',ph); localStorage.setItem('myTx',tx); localStorage.setItem('pending','yes');
+ let users=JSON.parse(localStorage.getItem('ALL_USERS')||"[]"); users.push({phone:ph,tx,time:new Date().toLocaleString()}); localStorage.setItem('ALL_USERS',JSON.stringify(users));
+ let msg=`🔔 CASH-NET PAYMENT 🔔%0APhone: ${ph}%0ATx: ${tx}%0AMK500%0AActivate: https://mateyufavour-source.github.io/CASH-NET/?activate=${ph}%26key=FAVOUR500`;
+ window.open(`https://wa.me/265885801081?text=${msg}`); setTimeout(()=>location.reload(),1200);
 }
-function openWAagain(){
- let ph=localStorage.getItem('myPhone'); let tx=localStorage.getItem('myTx');
- let msg=`🔔 PAYMENT PROOF AGAIN 🔔%0APhone: ${ph}%0ATx: ${tx}%0AMK500`;
- window.open(`https://wa.me/265885801081?text=${msg}`);
-}
+function openWAgain(){let ph=localStorage.getItem('myPhone'); let tx=localStorage.getItem('myTx'); let msg=`🔔 PAYMENT PROOF 🔔%0APhone: ${ph}%0ATx: ${tx}`; window.open(`https://wa.me/265885801081?text=${msg}`);}
 function showQ(){
+ if(todayCount>=100)return;
  let q=questions[qi%questions.length];
+ document.getElementById('qNum').innerText=`Q ${todayCount+1}/100`;
+ document.getElementById('qTimer').innerText=`${100-todayCount} LEFT TODAY`;
+ document.getElementById('qTitle').style.display='block'; document.getElementById('qOptions').style.display='block';
  document.getElementById('qTitle').innerText=q.q;
  document.getElementById('qOptions').innerHTML=q.o.map((o,i)=>`<button class="qbtn" onclick="ans(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join("");
 }
 function ans(i){
  let q=questions[qi%questions.length];
- if(i==q.c){points++; totalQ++; localStorage.setItem('points',points); localStorage.setItem('totalQ',totalQ); alert("✅ +MK2");}
- else alert("❌ Wrong");
- qi++; updateAll(); showQ();
+ if(i==q.c){points++; alert("✅ Correct +MK2! Next...");}
+ else{alert("❌ Wrong! Going to next question...");}
+ todayCount++; totalQ++; qi++;
+ localStorage.setItem('points',points); localStorage.setItem('todayCount',todayCount); localStorage.setItem('totalQ',totalQ);
+ updateAll();
+}
+// SPIN LOGIC
+function checkSpin(){
+ if(lastSpin===today){document.getElementById('spinBtn').disabled=true; document.getElementById('spinBtn').innerText="Already Spun Today - Come Tomorrow"; document.getElementById('spinStatus').innerText="✅ You already spun today! Come tomorrow"; document.getElementById('spinBtn').style.opacity="0.5";}
+}
+function doSpin(){
+ if(lastSpin===today)return alert("Already spun today!");
+ let prizes=[10,20,30,50,20,100]; // MK
+ let win=p prizes[Math.floor(Math.random()*prizes.length)];
+ let deg= Math.floor(Math.random()*360)+720;
+ document.getElementById('wheel').style.transform=`rotate(${deg}deg)`;
+ document.getElementById('spinBtn').disabled=true;
+ setTimeout(()=>{
+  let pts=win/2; points+=pts; localStorage.setItem('points',points); localStorage.setItem('lastSpin',today);
+  alert(`🎉 You won MK${win}! +${pts} points added!`); updateAll(); checkSpin();
+ },3100);
 }
 function doWithdraw(){
  let num=document.getElementById('wdNum').value; let amt=parseInt(document.getElementById('wdAmt').value);
  if(!num||!amt)return alert("Fill all"); if(points*2<amt)return alert("No bal"); if(amt<1000)return alert("Min 1000");
- alert("Withdraw request sent to 0885801081 via WhatsApp"); 
- let msg=`💸 WITHDRAW REQUEST%0APhone: ${myPhone}%0AWithdraw to: ${num}%0AAmount: MK${amt}`;
- window.open(`https://wa.me/265885801081?text=${msg}`);
- points-=amt/2; localStorage.setItem('points',points); updateAll();
+ let msg=`💸 WITHDRAW%0APhone: ${myPhone}%0ATo: ${num}%0AAmt: MK${amt}`; window.open(`https://wa.me/265885801081?text=${msg}`);
+ points-=amt/2; localStorage.setItem('points',points); updateAll(); alert("Withdraw sent to Admin");
 }
 updateAll();
 </script>
