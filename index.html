@@ -1,27 +1,188 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CASH-NET - Quiz & Earn</title>
+<title>CASH-NET PRO</title>
 <style>
-body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding:20px}
-.box{background:white;color:black;padding:20px;border-radius:15px;max-width:400px;margin:auto}
-button{background:#16a34a;color:white;padding:15px 25px;border:none;border-radius:10px;font-size:18px;width:100%;margin-top:10px}
+*{font-family:Arial;margin:0;padding:0;box-sizing:border-box}
+body{background:#0f172a;color:white;min-height:100vh}
+.header{background:#1e293b;padding:15px;text-align:center;border-bottom:3px solid #16a34a;position:sticky;top:0}
+.logo{font-size:26px;font-weight:800}
+.badge{background:#16a34a;padding:2px 8px;border-radius:20px;font-size:12px}
+.container{max-width:500px;margin:auto;padding:15px}
+.card{background:white;color:#0f172a;padding:20px;border-radius:16px;margin:12px 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:linear-gradient(135deg,#16a34a,#15803d);color:white;padding:15px;border-radius:12px;text-align:center}
+.stat h2{font-size:28px}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;font-size:16px;margin:6px 0}
+.btn-green{background:#16a34a;color:white}
+.btn-dark{background:#0f172a;color:white}
+.btn-gold{background:#f59e0b;color:black}
+input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0}
+.qbtn{background:#e2e8f0;color:#0f172a;padding:12px;margin:5px 0;border-radius:10px;width:100%;border:none;font-weight:600;text-align:left}
+.adminPanel{background:#1e293b;border:2px solid #f59e0b;border-radius:16px;padding:15px}
+.live{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block}
 </style>
 </head>
 <body>
-<h1>💰 CASH-NET</h1>
-<p>Quiz & Earn - 1Q=1PT=MK2</p>
-<div class="box">
-<h2>Join for MK500</h2>
-<p>Send MK500 to 0885801081 via Airtel Money</p>
-<p>WhatsApp screenshot to 0885801081</p>
-<button onclick="alert('Pay 0885801081 then WhatsApp proof!')">I PAID - ACTIVATE</button>
-<hr>
-<h3>Demo Quiz</h3>
-<p>What is capital of Malawi?</p>
-<button onclick="this.innerHTML='✅ Correct! +2MK'">A) Lilongwe</button>
-<button onclick="alert('Wrong')">B) Blantyre</button>
+<div class="header">
+<div class="logo" onclick="adminTap()">💰 CASH-NET <span class="badge">PRO</span></div>
+<div style="font-size:12px;margin-top:4px"><span class="live"></span> <span id="balTop">Balance MK0 | 0 Pts</span></div>
 </div>
+<div class="container">
+<div id="userView">
+<div class="stats">
+<div class="stat"><h2 id="sPoints">0</h2><p>POINTS</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)"><h2 id="sBal">MK0</h2><p>BALANCE</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><h2>MK2</h2><p>PER QUIZ</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)"><h2 id="sQ">0</h2><p>QUIZZES</p></div>
+</div>
+<div class="card" id="joinCard">
+<h2 style="text-align:center">🔓 Activate MK500</h2>
+<p style="text-align:center;margin:10px 0">Send <b>MK500</b> to<br><b style="font-size:20px;color:#16a34a">0885801081</b><br>Airtel - Favour Mateyu</p>
+<input id="inPhone" placeholder="Your Airtel number 088...">
+<input id="inName" placeholder="Your Name">
+<button class="btn btn-green" onclick="doPaid()">I PAID MK500 ✅</button>
+</div>
+<div class="card" id="quizCard" style="display:none">
+<h3 id="qTitle" style="margin:15px 0">Loading...</h3>
+<div id="qOptions"></div>
+</div>
+<div class="card" id="wdCard" style="display:none">
+<h3>💸 Withdraw</h3>
+<select id="wdMethod"><option>Airtel Money</option><option>TNM Mpamba</option></select>
+<input id="wdNum" placeholder="Number to receive">
+<input id="wdAmt" type="number" placeholder="Amount e.g. 2000">
+<button class="btn btn-dark" onclick="doWithdraw()">Request Withdraw</button>
+<div id="wdHistory" style="font-size:11px;margin-top:8px"></div>
+</div>
+<div class="card" style="text-align:center">
+<p style="font-size:12px">📢 Share & Earn MK100 per friend!</p>
+<p id="shareLink" style="font-size:10px;word-break:break-all;background:#f1f5f9;padding:8px;border-radius:8px">https://mateyufavour-source.github.io/CASH-NET/</p>
+<button class="btn btn-gold" onclick="shareApp()">Share WhatsApp</button>
+</div>
+</div>
+<div id="adminView" style="display:none">
+<div class="adminPanel">
+<h2>👑 ADMIN DASHBOARD</h2>
+<p style="font-size:12px;color:#f59e0b">0885801081 - Favour</p>
+<div class="stats" style="margin-top:15px">
+<div class="stat"><h2 id="aUsers">0</h2><p>USERS</p></div>
+<div class="stat"><h2 id="aProfit">MK0</h2><p>PROFIT</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#ef4444,#dc2626)"><h2 id="aWD">0</h2><p>WD REQ</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)"><h2 id="aActive">0</h2><p>ACTIVE</p></div>
+</div>
+<h3 style="margin:15px 0 8px;color:#f59e0b">📱 Users</h3>
+<div id="adminUsers" style="max-height:250px;overflow:auto">None</div>
+<h3 style="margin:15px 0 8px;color:#f59e0b">💸 Withdraws</h3>
+<div id="adminWD" style="max-height:250px;overflow:auto">None</div>
+<h3 style="margin:15px 0 8px;color:#f59e0b">➕ Add Question</h3>
+<input id="newQ" placeholder="Question"><input id="newA1" placeholder="Correct Answer"><input id="newA2" placeholder="Wrong Answer">
+<button class="btn btn-gold" onclick="addQ()">Add</button>
+<button class="btn btn-green" onclick="location.href=location.pathname">Exit Admin</button>
+<button class="btn" style="background:#ef4444;color:white" onclick="if(confirm('Delete All?')){localStorage.clear();location.reload()}">Reset</button>
+</div>
+</div>
+</div>
+<script>
+let points=parseInt(localStorage.getItem('points')||0);
+let totalQ=parseInt(localStorage.getItem('totalQ')||0);
+let activated=localStorage.getItem('activated')=="yes";
+let myPhone=localStorage.getItem('myPhone')||"";
+let tap=0;
+let questions=JSON.parse(localStorage.getItem('myQs'))||[
+{q:"Capital of Malawi?",o:["Lilongwe","Blantyre"],c:0},
+{q:"Lake in Malawi?",o:["Lake Malawi","Lake Victoria"],c:0},
+{q:"Currency of Malawi?",o:["Kwacha","Rand"],c:0},
+{q:"Independence year?",o:["1964","1994"],c:0},
+{q:"2+2=?",o:["4","5"],c:0}
+];
+let qi=0;
+function updateAll(){
+ let bal=points*2;
+ document.getElementById('balTop').innerText=`Balance MK${bal} | ${points} Pts`;
+ document.getElementById('sPoints').innerText=points;
+ document.getElementById('sBal').innerText="MK"+bal;
+ document.getElementById('sQ').innerText=totalQ;
+ if(myPhone) document.getElementById('shareLink').innerText=`https://mateyufavour-source.github.io/CASH-NET/?ref=${myPhone}`;
+ if(activated){
+  document.getElementById('joinCard').style.display='none';
+  document.getElementById('quizCard').style.display='block';
+  document.getElementById('wdCard').style.display='block';
+  showQ();
+ }
+ loadWDHistory();
+}
+function adminTap(){tap++; if(tap>=5){let pin=prompt("Admin PIN:"); if(pin=="0885801081"||pin=="500"){showAdmin();} tap=0;}}
+function showAdmin(){
+ document.getElementById('userView').style.display='none';
+ document.getElementById('adminView').style.display='block';
+ let users=JSON.parse(localStorage.getItem('ALL_USERS')||"[]");
+ let wds=JSON.parse(localStorage.getItem('WD_REQS')||"[]");
+ document.getElementById('aUsers').innerText=users.length;
+ document.getElementById('aProfit').innerText="MK"+(users.length*500);
+ document.getElementById('aWD').innerText=wds.length;
+ document.getElementById('aActive').innerText=users.length;
+ document.getElementById('adminUsers').innerHTML= users.length? users.map(u=>`<div style="background:#0f172a;padding:8px;border-radius:6px;margin:4px 0;display:flex;justify-content:space-between"><span>📱 ${u.phone}<br><small>${u.time}</small></span><span style="color:#22c55e">MK500</span></div>`).join("") : "No users yet";
+ document.getElementById('adminWD').innerHTML= wds.length? wds.map(w=>`<div style="background:#0f172a;padding:8px;border-radius:6px;margin:4px 0"><span>💸 ${w.num} MK${w.amt} ${w.method}<br><small>${w.time}</small></span></div>`).join("") : "No withdraws";
+}
+function doPaid(){
+ let ph=document.getElementById('inPhone').value;
+ let nm=document.getElementById('inName').value;
+ if(ph.length<9)return alert("Enter phone");
+ let users=JSON.parse(localStorage.getItem('ALL_USERS')||"[]");
+ users.push({phone:ph,name:nm,time:new Date().toLocaleString()});
+ localStorage.setItem('ALL_USERS',JSON.stringify(users));
+ localStorage.setItem('activated','yes');
+ localStorage.setItem('myPhone',ph);
+ alert("Activated! Refreshing...");
+ location.reload();
+}
+function showQ(){
+ let q=questions[qi%questions.length];
+ document.getElementById('qTitle').innerText=q.q;
+ document.getElementById('qOptions').innerHTML=q.o.map((o,i)=>`<button class="qbtn" onclick="ans(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join("");
+}
+function ans(i){
+ let q=questions[qi%questions.length];
+ if(i==q.c){points++; totalQ++; localStorage.setItem('points',points); localStorage.setItem('totalQ',totalQ); alert("✅ Correct +MK2");}
+ else alert("❌ Wrong");
+ qi++; updateAll(); showQ();
+}
+function doWithdraw(){
+ let num=document.getElementById('wdNum').value;
+ let amt=parseInt(document.getElementById('wdAmt').value);
+ let method=document.getElementById('wdMethod').value;
+ if(!num||!amt)return alert("Fill all");
+ if(points*2<amt)return alert("Insufficient MK"+points*2);
+ if(amt<1000)return alert("Min MK1000");
+ let wds=JSON.parse(localStorage.getItem('WD_REQS')||"[]");
+ wds.push({num,amt,method,time:new Date().toLocaleString()});
+ localStorage.setItem('WD_REQS',JSON.stringify(wds));
+ points-=amt/2; localStorage.setItem('points',points);
+ alert("Request sent to Admin 0885801081");
+ updateAll();
+}
+function loadWDHistory(){
+ let wds=JSON.parse(localStorage.getItem('WD_REQS')||"[]");
+ document.getElementById('wdHistory').innerHTML=wds.slice(-3).map(w=>`⏳ ${w.method} MK${w.amt} to ${w.num}`).join("<br>");
+}
+function addQ(){
+ let q=document.getElementById('newQ').value;
+ let a1=document.getElementById('newA1').value;
+ let a2=document.getElementById('newA2').value;
+ if(!q||!a1||!a2)return alert("Fill all");
+ questions.push({q,o:[a1,a2],c:0});
+ localStorage.setItem('myQs',JSON.stringify(questions));
+ alert("Added!");
+}
+function shareApp(){
+ let link=document.getElementById('shareLink').innerText;
+ window.open(`https://wa.me/?text=${encodeURIComponent("Join CASH-NET Quiz Earn MK2 per Q! "+link)}`);
+}
+if(location.search.includes("0885801081")||location.search.includes("admin")){showAdmin();}
+updateAll();
+</script>
 </body>
 </html>
