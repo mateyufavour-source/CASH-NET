@@ -18,46 +18,34 @@ input{padding:14px;border-radius:10px;width:95%;margin:6px;background:#000;color
 .tabs{display:flex;gap:5px}
 .tab{flex:1;padding:10px;border-radius:8px;background:#334155;color:#fff;border:none;font-weight:bold}
 .tab.active{background:#fbbf24;color:#000}
+#logo{cursor:pointer;padding:15px;background:#1e293b;border-radius:12px;max-width:420px;margin:10px auto;border:2px solid #fbbf24;user-select:none}
 </style>
 </head>
 <body>
-<h1 id="logo">💰 CASH-NET</h1>
-<p style="font-size:10px;color:#888">Tap logo 5x for Admin</p>
+<h1 id="logo">💰 CASH-NET<br><small style="font-size:10px;color:#aaa">Tap 5x for Admin</small></h1>
 
 <div class="card" id="loginBox" style="display:block">
 <h3>Enter Phone to Login</h3>
-<input id="phoneInput" type="tel" placeholder="0985675470" autocomplete="off">
-<button class="btn btn-gold" id="loginBtn" type="button">LOGIN NOW</button>
-<p style="font-size:11px;margin-top:8px;color:#94a3b8">You get 50 free points</p>
+<input id="phoneInput" type="tel" placeholder="0985675470">
+<button class="btn btn-gold" id="loginBtn">LOGIN NOW</button>
 </div>
 
 <div id="mainArea" style="display:none;max-width:420px;margin:auto">
 <div class="card" style="border:2px solid #fbbf24">
 <h3>💼 WALLET: MK <span id="walletBal">0</span></h3>
 <p>Points: <span id="pts">0</span></p>
-<p id="statusTxt" style="font-size:11px"></p>
-<button class="btn btn-green" onclick="withdrawWA()">💸 Withdraw WhatsApp</button>
-<button class="btn btn-dark" onclick="convertPts()">Convert Points to MK</button>
+<p id="statusTxt"></p>
+<button class="btn btn-green" onclick="withdrawWA()">💸 Withdraw</button>
+<button class="btn btn-dark" onclick="convertPts()">Convert Points</button>
 </div>
-
-<div class="tabs" style="max-width:420px;margin:10px auto">
-<button class="tab active" onclick="showTab('quiz',this)">Quiz</button>
-<button class="tab" onclick="showTab('spin',this)">Spin</button>
-<button class="tab" onclick="showTab('more',this)">More</button>
-</div>
-
-<div class="card" id="tab-quiz"><div id="timer">10</div><h3 id="qText"></h3><div id="qOpts"></div><p id="qRes"></p></div>
+<div class="tabs"><button class="tab active" onclick="showTab('quiz',this)">Quiz</button><button class="tab" onclick="showTab('spin',this)">Spin</button><button class="tab" onclick="showTab('more',this)">More</button></div>
+<div class="card" id="tab-quiz"><div id="timer">10</div><h3 id="qText"></h3><div id="qOpts"></div><p id="qRes" style="font-weight:bold"></p></div>
 <div class="card" id="tab-spin" style="display:none"><div id="wheel">🎯</div><p id="spinRes"></p><button class="btn btn-gold" onclick="spin()">SPIN (20pts)</button><p id="freeSpinTxt"></p></div>
-<div class="card" id="tab-more" style="display:none">
-<button class="btn btn-gold" onclick="shareWA()">📤 Share (+20)</button>
-<button class="btn btn-green" onclick="inviteWA()">👥 Invite (+50)</button>
-<button class="btn btn-dark" onclick="payWA()">💰 Renew MK500</button>
-<p style="word-break:break-all;font-size:10px">Link: <span id="myLink"></span></p>
-</div>
+<div class="card" id="tab-more" style="display:none"><button class="btn btn-gold" onclick="shareWA()">📤 Share (+20)</button><button class="btn btn-green" onclick="inviteWA()">👥 Invite (+50)</button><button class="btn btn-dark" onclick="payWA()">💰 Renew</button><p style="font-size:10px;word-break:break-all">Link: <span id="myLink"></span></p></div>
 </div>
 
 <div class="card" id="payBox" style="display:none"><h3>🔒 Expired - Pay MK500</h3><p>Airtel 0985675470<br>TNM 0885801081</p><button class="btn btn-green" onclick="payWA()">WhatsApp Proof</button></div>
-<div class="card" id="adminBox" style="display:none"><input id="adminPhone" placeholder="Phone"><button class="btn btn-green" onclick="adminAct()">Activate 3 Days</button><div id="userList"></div></div>
+<div class="card" id="adminBox" style="display:none"><h3 style="color:#ef4444">👑 ADMIN</h3><input id="adminPhone" placeholder="Phone"><button class="btn btn-green" onclick="adminAct()">Activate 3 Days</button><button class="btn btn-dark" onclick="renderUsers()">Refresh</button><div id="userList"></div></div>
 
 <script>
 let users=JSON.parse(localStorage.getItem('cashnet_users')||'{}');
@@ -75,56 +63,88 @@ let questions=[
 {q:"100-50?",o:["50","100"],a:0},
 {q:"9x9?",o:["81","72"],a:0}
 ];
-let qIndex=0,tInt=null,freeSpin=1;
+let qIndex=0,tInt=null,freeSpin=1,answered=false;
 
 function loginNow(){
- let input=document.getElementById('phoneInput');
- let ph=input.value.trim();
- console.log('Login click',ph);
- if(!ph || ph.length<9){alert('Enter valid phone e.g 0985675470'); return;}
- cur=ph;
- localStorage.setItem('cashnet_current',ph);
+ let ph=document.getElementById('phoneInput').value.trim();
+ if(!ph||ph.length<9){alert('Enter phone');return;}
+ cur=ph; localStorage.setItem('cashnet_current',ph);
  if(!users[ph]) users[ph]={pts:50,balance:0,active:false,expiry:0};
- // admin always active
  if(ph==='0885801081'){users[ph].active=true;users[ph].expiry=Date.now()+7*24*60*60*1000;}
  localStorage.setItem('cashnet_users',JSON.stringify(users));
- document.getElementById('loginBox').style.display='none';
  check();
 }
-
-document.getElementById('loginBtn').addEventListener('click', loginNow);
-document.getElementById('phoneInput').addEventListener('keydown', function(e){ if(e.key==='Enter') loginNow(); });
+document.getElementById('loginBtn').addEventListener('click',loginNow);
 
 let urlP=new URLSearchParams(location.search);
+if(urlP.has('admin')){setTimeout(()=>{document.getElementById('adminBox').style.display='block';renderUsers();},500);}
 let ap=urlP.get('activate'); if(ap){if(!users[ap])users[ap]={pts:50,balance:0};users[ap].active=true;users[ap].expiry=Date.now()+3*24*60*60*1000;localStorage.setItem('cashnet_users',JSON.stringify(users));localStorage.setItem('cashnet_current',ap);alert(ap+' Activated');history.replaceState({},'',location.pathname);}
 let ref=urlP.get('ref'); if(ref){if(!users[ref])users[ref]={pts:50,balance:0};users[ref].pts+=50;localStorage.setItem('cashnet_users',JSON.stringify(users));}
 
 function check(){
- if(!cur){document.getElementById('loginBox').style.display='block'; return;}
+ if(!cur){document.getElementById('loginBox').style.display='block';return;}
  document.getElementById('loginBox').style.display='none';
- let u=users[cur];
- if(!u){document.getElementById('loginBox').style.display='block'; return;}
- let ok=u.active && u.expiry>Date.now() || cur==='0885801081';
+ let u=users[cur]; let ok=u.active&&u.expiry>Date.now()||cur==='0885801081';
  if(ok){document.getElementById('mainArea').style.display='block'; updateUI(); startQ();}
  else{document.getElementById('payBox').style.display='block';}
 }
-function updateUI(){let u=users[cur]; if(!u) return; document.getElementById('pts').innerText=u.pts||0; document.getElementById('walletBal').innerText=u.balance||0; document.getElementById('myLink').innerText=siteLink+'?ref='+cur; document.getElementById('statusTxt').innerText='Active till '+new Date(u.expiry).toLocaleDateString(); document.getElementById('freeSpinTxt').innerText=freeSpin+' free left';}
+function updateUI(){let u=users[cur]; document.getElementById('pts').innerText=u.pts||0; document.getElementById('walletBal').innerText=u.balance||0; document.getElementById('myLink').innerText=siteLink+'?ref='+cur; document.getElementById('statusTxt').innerText='Active till '+new Date(u.expiry).toLocaleDateString(); document.getElementById('freeSpinTxt').innerText=freeSpin+' free left';}
 function showTab(t,el){document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); document.getElementById('tab-quiz').style.display=t==='quiz'?'block':'none'; document.getElementById('tab-spin').style.display=t==='spin'?'block':'none'; document.getElementById('tab-more').style.display=t==='more'?'block':'none';}
 function startQ(){qIndex=0; showQ();}
-function showQ(){if(qIndex>=questions.length) qIndex=0; let qq=questions[qIndex]; document.getElementById('qText').innerText=(qIndex+1)+'. '+qq.q; let o=document.getElementById('qOpts'); o.innerHTML=''; qq.o.forEach((op,i)=>{let b=document.createElement('button');b.className='btn btn-dark';b.innerText=op;b.onclick=()=>ans(i);o.appendChild(b);}); let timeLeft=10; document.getElementById('timer').innerText=timeLeft; clearInterval(tInt); tInt=setInterval(()=>{timeLeft--; document.getElementById('timer').innerText=timeLeft; if(timeLeft<=0){clearInterval(tInt); qIndex++; showQ();}},1000);}
-function ans(i){clearInterval(tInt); let qq=questions[qIndex]; if(i===qq.a){users[cur].pts+=10; document.getElementById('qRes').innerText='✅ +10';}else{document.getElementById('qRes').innerText='❌ Wrong';} localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI(); qIndex++; setTimeout(()=>{document.getElementById('qRes').innerText=''; showQ();},700);}
-function spin(){let u=users[cur]; if(freeSpin<=0 && u.pts<20) return alert('Need 20pts'); if(freeSpin>0) freeSpin--; else u.pts-=20; let wheel=document.getElementById('wheel'); let deg=360*5+Math.random()*360; wheel.style.transform=`rotate(${deg}deg)`; setTimeout(()=>{let prizes=[0,10,20,50,100,500]; let p=prizes[Math.floor(Math.random()*prizes.length)]; if(p>0){u.balance+=p; document.getElementById('spinRes').innerText='Won MK'+p;}else{document.getElementById('spinRes').innerText='Try again';} localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI();},3000);}
-function convertPts(){let u=users[cur]; if(u.pts<10) return alert('Need 10pts'); let mk=Math.floor(u.pts/10)*10; u.pts-=mk; u.balance+=mk; localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI(); alert('Converted MK'+mk);}
-function withdrawWA(){let b=users[cur].balance||0; if(b<500) return alert('Min MK500 - You have MK'+b); window.open('https://wa.me/265885801081?text='+encodeURIComponent('Withdraw MK'+b+' CASH-NET '+cur));}
-function payWA(){window.open('https://wa.me/265885801081?text='+encodeURIComponent('Paid MK500 for '+cur));}
-function shareWA(){window.open('https://wa.me/?text='+encodeURIComponent('Earn CASH-NET: '+siteLink+'?ref='+cur)); users[cur].pts+=20; localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI();}
-function inviteWA(){window.open('https://wa.me/?text='+encodeURIComponent('Join CASH-NET: '+siteLink+'?ref='+cur));}
-let taps=0; document.getElementById('logo').addEventListener('click',()=>{taps++; if(taps>=5){let pin=prompt('Admin PIN'); if(pin==='0885801081'){document.getElementById('adminBox').style.display='block'; renderUsers();} taps=0;} setTimeout(()=>taps=0,2000);});
-function adminAct(){let ph=document.getElementById('adminPhone').value.trim(); if(!ph)return; if(!users[ph])users[ph]={pts:50,balance:0}; users[ph].active=true; users[ph].expiry=Date.now()+3*24*60*60*1000; localStorage.setItem('cashnet_users',JSON.stringify(users)); renderUsers();}
-function renderUsers(){let d=document.getElementById('userList'); d.innerHTML=''; let all=JSON.parse(localStorage.getItem('cashnet_users')||'{}'); users=all; for(let ph in all){let u=all[ph]; let act=u.active&&u.expiry>Date.now(); let el=document.createElement('div'); el.style=`background:#0f172a;padding:8px;margin:4px;border-left:4px solid ${act?'#22c55e':'#ef4444'};text-align:left`; el.innerHTML=`${ph} MK${u.balance||0} ${u.pts||0}pts ${act?'ACTIVE':'BLOCKED'}`; el.onclick=()=>{if(act){all[ph].active=false;}else{all[ph].active=true;all[ph].expiry=Date.now()+3*24*60*60*1000;} localStorage.setItem('cashnet_users',JSON.stringify(all)); renderUsers();}; d.appendChild(el);}}
 
-// auto login if already
-if(cur){document.getElementById('phoneInput').value=cur; check();}
-</script>
-</body>
-</html>
+function showQ(){
+ if(qIndex>=questions.length) qIndex=0;
+ answered=false;
+ let qq=questions[qIndex];
+ document.getElementById('qText').innerText=(qIndex+1)+'. '+qq.q;
+ document.getElementById('qRes').innerText='';
+ let o=document.getElementById('qOpts'); o.innerHTML='';
+ qq.o.forEach((op,i)=>{
+  let b=document.createElement('button');
+  b.className='btn btn-dark';
+  b.innerText=op;
+  b.disabled=false;
+  b.onclick=()=>{if(!answered) ans(i);};
+  o.appendChild(b);
+ });
+ let timeLeft=10;
+ document.getElementById('timer').innerText=timeLeft;
+ clearInterval(tInt);
+ tInt=setInterval(()=>{
+  if(answered){clearInterval(tInt);return;}
+  timeLeft--;
+  document.getElementById('timer').innerText=timeLeft;
+  if(timeLeft<=0){
+   clearInterval(tInt);
+   document.getElementById('qRes').innerText='⏰ Time up!';
+   qIndex++;
+   setTimeout(()=>{showQ();},1000);
+  }
+ },1000);
+}
+
+// FIXED: TIMER STOPS AFTER ANSWER
+function ans(i){
+ if(answered) return;
+ answered=true;
+ clearInterval(tInt);
+ document.getElementById('timer').innerText='0';
+ let qq=questions[qIndex];
+ // disable all buttons
+ document.querySelectorAll('#qOpts button').forEach(b=>b.disabled=true);
+ if(i===qq.a){
+  users[cur].pts+=10;
+  document.getElementById('qRes').innerText='✅ Correct +10';
+  document.getElementById('qRes').style.color='#22c55e';
+ }else{
+  document.getElementById('qRes').innerText='❌ Wrong';
+  document.getElementById('qRes').style.color='#ef4444';
+ }
+ localStorage.setItem('cashnet_users',JSON.stringify(users));
+ updateUI();
+ qIndex++;
+ setTimeout(()=>{showQ();},1200);
+}
+
+function spin(){let u=users[cur]; if(freeSpin<=0&&u.pts<20) return alert('Need 20pts'); if(freeSpin>0)freeSpin--; else u.pts-=20; let w=document.getElementById('wheel'); w.style.transform=`rotate(${360*5+Math.random()*360}deg)`; setTimeout(()=>{let pr=[0,10,20,50,100,500]; let p=pr[Math.floor(Math.random()*pr.length)]; if(p>0){u.balance+=p; document.getElementById('spinRes').innerText='Won MK'+p;}else{document.getElementById('spinRes').innerText='Try again';} localStorage.setItem('cashnet_users',JSON.stringify(users)); updateUI();},3000);}
+function convertPts(){let u=users[cur]; if(u.pts<10) return alert('Need 10pts'); let mk=Math.floor(u.pts/10)*10; u.pts-=mk; u.balance+=mk; localStorage.setItem('cashnet_users
