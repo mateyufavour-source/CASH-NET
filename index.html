@@ -1,139 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CASH-NET PRO - Follow Required</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASH-NET - Earn Money</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <style>
-*{font-family:Arial;margin:0;padding:0;box-sizing:border-box}
-body{background:#0f172a;color:white;min-height:100vh}
-.header{background:#1e293b;padding:12px;text-align:center;border-bottom:3px solid #16a34a;position:sticky;top:0;z-index:10}
-.logo{font-size:24px;font-weight:800;cursor:pointer}
-.container{max-width:520px;margin:auto;padding:12px}
-.card{background:white;color:#0f172a;padding:16px;border-radius:16px;margin:10px 0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stat{color:white;padding:12px;border-radius:12px;text-align:center}
-.stat h2{font-size:18px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;font-weight:800;font-size:13px;margin:5px 0;cursor:pointer}
-.btn-wa{background:#25D366;color:white}
-.btn-dark{background:#0f172a;color:white}
-.btn-gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:black}
-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin:5px 0}
-.qbtn{background:#e2e8f0;color:#0f172a;padding:12px;margin:4px 0;border-radius:10px;width:100%;border:none;font-weight:600;text-align:left;font-size:14px}
-.progress{height:8px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:8px 0}
-.progress-bar{height:100%;background:#16a34a;width:0%;transition:0.3s}
-#timerBar{height:6px;background:#ef4444;width:100%;transition:width 1s linear;border-radius:20px;margin:6px 0}
-.wheel-box{text-align:center}
-#wheel{width:180px;height:180px;border-radius:50%;border:5px solid #f59e0b;margin:8px auto;background:conic-gradient(#16a34a 0deg 60deg,#0ea5e9 60deg 120deg,#f59e0b 120deg 180deg,#8b5cf6 180deg 240deg,#ef4444 240deg 300deg,#10b981 300deg 360deg);transition:transform 3s cubic-bezier(0.2,0.8,0.2,1);position:relative}
-#wheel::after{content:'▲';position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:20px;color:#f59e0b}
-.leader-row{display:flex;justify-content:space-between;padding:8px 10px;border-radius:8px;margin:4px 0;background:#f1f5f9;font-size:12px}
-.leader-row.top1{background:linear-gradient(135deg,#f59e0b,#d97706);color:black;font-weight:800}
-.leader-row.me{border:2px solid #16a34a;background:#dcfce7}
-.tabs{display:flex;gap:6px;margin-bottom:8px}
-.tab{flex:1;padding:8px;border-radius:8px;border:none;background:#e2e8f0;font-weight:700;font-size:12px}
-.tab.active{background:#0f172a;color:white}
-.locked{background:linear-gradient(135deg,#ef4444,#dc2626);color:white;text-align:center;padding:20px;border-radius:16px;margin:10px 0}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0f172a;color:#fff;text-align:center;padding:10px}
+.card{background:#1e293b;padding:16px;border-radius:14px;margin:10px auto;max-width:420px;box-shadow:0 4px 15px rgba(0,0,0,.4)}
+.btn{padding:13px;border:none;border-radius:10px;font-weight:bold;width:95%;margin:5px 0;cursor:pointer}
+.btn-gold{background:linear-gradient(45deg,#f59e0b,#fbbf24);color:#000}
+.btn-green{background:#25D366;color:#fff}
+.btn-dark{background:#334155;color:#fff}
+.btn-red{background:#ef4444;color:#fff}
+input{padding:12px;border-radius:10px;width:95%;margin:6px;background:#0f172a;color:#fff;border:1px solid #334155}
+#timer{font-size:48px;font-weight:900;color:#fbbf24}
+#offlineBox{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f172a;z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column}
 </style>
 </head>
 <body>
-<div class="header">
-<div class="logo" onclick="adminTap()">💰 CASH-NET <span style="background:#25D366;padding:2px 8px;border-radius:12px;font-size:11px">FOLLOW REQUIRED</span></div>
-<div id="balTop" style="font-size:11px;margin-top:3px">MK0 | 0 Pts | Today 0/100</div>
-</div>
-<div class="container">
 
-<div class="stats">
-<div class="stat" style="background:linear-gradient(135deg,#16a34a,#15803d)"><h2 id="sPoints">0</h2><p>PTS</p></div>
-<div class="stat" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)"><h2 id="sBal">MK0</h2><p>BAL</p></div>
-<div class="stat" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><h2 id="sToday">0/100</h2><p>TODAY</p></div>
-<div class="stat" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)"><h2 id="sRank">-</h2><p>RANK</p></div>
+<div id="offlineBox">
+<h1>📵 No Internet</h1>
+<p style="margin:15px">CASH-NET needs internet to earn.<br>Turn on data/WiFi.</p>
+<button class="btn btn-gold" onclick="location.reload()">Try Again</button>
 </div>
 
-<!-- FOLLOW CHANNEL REQUIRED -->
-<div class="card" id="followCard" style="background:linear-gradient(135deg,#25D366,#128C7E);color:white;text-align:center;border:3px solid white">
-<h2>📢 STEP 2: Follow Channel!</h2>
-<p style="font-size:13px;margin:8px 0">You must follow our WhatsApp Channel to play quiz & earn!</p>
-<button class="btn" style="background:white;color:#128C7E;font-size:16px" onclick="doFollow()">✅ FOLLOW CHANNEL NOW</button>
-<p style="font-size:11px;margin-top:8px">👆 Click → Follow → Return → Quiz Unlocks!</p>
-<div id="followDone" style="display:none;background:white;color:#128C7E;padding:8px;border-radius:8px;margin-top:10px;font-weight:800">✅ Followed! Quiz unlocked!</div>
+<h1 id="logo" style="cursor:pointer">💰 CASH-NET</h1>
+<p style="font-size:11px;color:#94a3b8">Tap logo 5x for Admin</p>
+
+<!-- AD TOP -->
+<div class="card" style="background:#fff;color:#000;padding:8px">
+<p style="font-size:10px">Advertisement</p>
+<div style="background:#fbbf24;padding:12px;border-radius:8px;color:#000;font-weight:bold">🔥 CASH-NET - Pay MK500 Earn Daily! Airtel 0985675470 / TNM 0885801081</div>
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXX" data-ad-slot="XXXX" data-ad-format="auto"></ins>
+<script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
 </div>
 
-<div class="card" id="lockCard" style="display:none">
-<div class="locked">
-<h2>🔒 Quiz Locked!</h2>
-<p>Follow WhatsApp Channel first to unlock!</p>
-<button class="btn" style="background:white;color:#ef4444;margin-top:10px" onclick="doFollow()">FOLLOW NOW</button>
-</div>
+<div class="card" id="loginBox">
+<input id="phone" placeholder="Phone e.g 0985675470">
+<button class="btn btn-gold" onclick="login()">LOGIN</button>
 </div>
 
-<div class="card" id="leaderCard">
-<div style="display:flex;justify-content:space-between;align-items:center"><h3>🏆 Leaderboard - Name + Number</h3><button class="btn" style="width:auto;padding:6px 10px;font-size:11px;background:#0f172a;color:white" onclick="updateLeaderboard()">Refresh</button></div>
-<div class="tabs"><button class="tab active" id="tabToday" onclick="showLB('today')">Today</button><button class="tab" id="tabAll" onclick="showLB('all')">All Time</button></div>
-<div id="leaderList"></div>
+<div class="card" id="mainBox" style="display:none">
+<h3>Points: <span id="pts">0</span></h3>
+<p id="statusTxt" style="font-size:12px;color:#fbbf24"></p>
+<div id="timer">10</div>
+<h3 id="qText" style="margin:12px 0;min-height:35px"></h3>
+<div id="qOpts"></div>
+<p id="qRes" style="font-weight:bold;margin:8px"></p>
+<!-- AD MIDDLE -->
+<div style="background:#fff;color:#000;padding:8px;border-radius:10px;margin:10px 0">
+<p style="font-size:10px">Ad - Support us</p>
+<div style="background:#e2e8f0;padding:15px;border-radius:6px">Ad Space - Earn money per view</div>
+</div>
+<button class="btn btn-gold" onclick="shareWA()">📤 Share WhatsApp Status (+20)</button>
+<button class="btn btn-green" onclick="inviteWA()">👥 Invite Friend (+50)</button>
+<button class="btn btn-dark" onclick="contactWA()">💬 Chat Admin WhatsApp</button>
+<button class="btn btn-dark" onclick="payWA()">💰 Renew via WhatsApp</button>
+<p style="font-size:10px;margin-top:8px;word-break:break-all">Link: <span id="myLink"></span></p>
 </div>
 
-<div class="card" id="joinCard">
-<h2 style="text-align:center">🔓 STEP 1: Activate MK500</h2>
-<p style="text-align:center">Send <b>MK500</b> to<br><b style="color:#16a34a;font-size:20px">0885801081</b></p>
-<input id="inName" placeholder="Full Name *"><input id="inPhone" placeholder="Number 099... *"><input id="inTx" placeholder="Transaction ID *">
-<button class="btn btn-wa" onclick="doPaidWA()">I PAID - WhatsApp ✅</button>
+<div class="card" id="payBox" style="display:none">
+<h3 style="color:#fbbf24">🔒 Expired - Pay MK500 / 3 Days</h3>
+<p>Airtel: <b style="color:#25D366;font-size:18px">0985675470</b><br>TNM: <b style="color:#25D366;font-size:18px">0885801081</b></p>
+<button class="btn btn-green" onclick="payWA()">I PAID - WhatsApp Proof</button>
+<button class="btn btn-dark" onclick="location.reload()">Check Activation</button>
 </div>
 
-<div class="card" id="pendingCard" style="display:none"><div style="background:#fef3c7;padding:12px;border-radius:12px;text-align:center"><h3>⏳ PENDING</h3><p id="pendText"></p><button class="btn btn-wa" onclick="openWAgain()">WhatsApp Again</button><button class="btn btn-dark" onclick="localStorage.clear();location.reload()">Change</button></div></div>
-<div class="card" id="spinCard" style="display:none"><div class="wheel-box"><h3>🎡 Daily Spin</h3><div id="wheel"></div><p id="spinStatus">1 spin today!</p><button class="btn btn-gold" id="spinBtn" onclick="doSpin()">SPIN NOW 🎡</button></div></div>
-<div class="card" id="quizCard" style="display:none">
-<div style="display:flex;justify-content:space-between;font-size:11px"><span id="qNum">Q 1/100</span><span id="qTimer" style="color:#ef4444;font-weight:800">10s</span></div>
-<div class="progress"><div class="progress-bar" id="pBar"></div></div><div id="timerBar"></div>
-<h3 id="qTitle"></h3><div id="qOptions"></div>
-<div id="limitMsg" style="display:none;text-align:center;color:red"><h3>🎉 100/100 Done!</h3></div>
+<div class="card" id="adminBox" style="display:none">
+<h3 style="color:#ef4444">👑 ADMIN ALL ACCOUNTS</h3>
+<input id="adminPhone" placeholder="Phone to activate">
+<button class="btn btn-green" onclick="adminAct()">Activate 3 Days</button>
+<button class="btn btn-green" onclick="copyLink()">Copy Activate Link</button>
+<button class="btn btn-dark" onclick="renderUsers()">🔄 Refresh</button>
+<button class="btn btn-red" onclick="adminExpiryBroadcast()">📢 WhatsApp All Expired</button>
+<div id="userList" style="max-height:450px;overflow-y:auto;margin-top:10px"></div>
 </div>
-<div class="card" id="wdCard" style="display:none"><h3>💸 Withdraw Min MK1000</h3><input id="wdNum" placeholder="Number"><input id="wdAmt" type="number" placeholder="Amount"><button class="btn btn-dark" onclick="doWithdraw()">Request</button></div>
-<div class="card" id="adminBox" style="display:none;background:#1e293b;color:white;border:2px solid #f59e0b"><h2>👑 ADMIN</h2><input id="adminPhone" placeholder="User phone"><button class="btn" style="background:#25D366;color:white" onclick="genLink()">Generate Link</button><div id="genLinkOut" style="background:#0f172a;padding:8px;border-radius:8px;margin:8px 0;word-break:break-all;font-size:11px"></div><button class="btn btn-dark" onclick="location.href=location.pathname">Exit</button></div>
-</div>
+
 <script>
-let points=parseInt(localStorage.getItem('points')||0); let todayCount=parseInt(localStorage.getItem('todayCount')||0); let todayPoints=parseInt(localStorage.getItem('todayPoints')||0); let lastDate=localStorage.getItem('lastDate')||""; let today=new Date().toDateString(); if(lastDate!==today){todayCount=0; todayPoints=0; localStorage.setItem('todayCount',0); localStorage.setItem('todayPoints',0); localStorage.setItem('lastDate',today);} localStorage.setItem('lastDate',today); let activated=localStorage.getItem('activated')=="yes"; let myPhone=localStorage.getItem('myPhone')||""; let myName=localStorage.getItem('myName')||""; let pending=localStorage.getItem('pending')=="yes"; let followed=localStorage.getItem('followed')=="yes"; let lastSpin=localStorage.getItem('lastSpin')||""; let tap=0; let qi=todayCount; let timeLeft=10; let timerInt=null; let lbMode='today';
-let questions=[{q:"Capital of Malawi?",o:["Lilongwe","Blantyre","Mzuzu"],c:0},{q:"Currency?",o:["Kwacha","Dollar","Rand"],c:0},{q:"Lake?",o:["Lake Malawi","Victoria","Chad"],c:0},{q:"Independence?",o:["1964","1960","1970"],c:0},{q:"Regions?",o:["3","4","5"],c:0},{q:"Largest city?",o:["Lilongwe","Zomba","Karonga"],c:0},{q:"President 2024?",o:["Chakwera","Mutharika","Banda"],c:0},{q:"First President?",o:["Banda","Bingu","Chakwera"],c:0},{q:"River?",o:["Shire","Nile","Zambezi"],c:0},{q:"Park?",o:["Liwonde","Serengeti","Kruger"],c:0},{q:"Flag?",o:["Black Red Green","Red White Blue","Green Yellow"],c:0},{q:"Language?",o:["Chichewa","Swahili","Zulu"],c:0},{q:"Continent?",o:["Africa","Asia","Europe"],c:0},{q:"Zambia cap?",o:["Lusaka","Harare","Maputo"],c:0},{q:"Tanzania cap?",o:["Dodoma","Dar","Nairobi"],c:0},{q:"Mozambique cap?",o:["Maputo","Lusaka","Lilongwe"],c:0},{q:"Largest lake?",o:["Victoria","Malawi","Tanganyika"],c:0},{q:"Longest river?",o:["Nile","Shire","Congo"],c:0},{q:"Days week?",o:["7","6","5"],c:0},{q:"Months?",o:["12","10","11"],c:0},{q:"Sun rises?",o:["East","West","North"],c:0},{q:"Water?",o:["H2O","CO2","O2"],c:0},{q:"Bees?",o:["Honey","Milk","Oil"],c:0},{q:"Fastest?",o:["Cheetah","Lion","Elephant"],c:0},{q:"Largest animal?",o:["Blue Whale","Elephant","Lion"],c:0},{q:"Rainbow?",o:["7","6","8"],c:0},{q:"USA cap?",o:["Washington","New York","Texas"],c:0},{q:"UK cap?",o:["London","Paris","Berlin"],c:0},{q:"China cap?",o:["Beijing","Shanghai","Tokyo"],c:0},{q:"Malawi team?",o:["Flames","Chipolopolo","Bafana"],c:0},{q:"Players?",o:["11","10","12"],c:0},{q:"World Cup 2022?",o:["Argentina","France","Brazil"],c:0},{q:"Madzi?",o:["Madzi","Moto","Dzuwa"],c:0},{q:"Moto?",o:["Moto","Madzi","Nyumba"],c:0},{q:"Ocean?",o:["Pacific","Atlantic","Indian"],c:0},{q:"Smallest country?",o:["Vatican","Malawi","Lesotho"],c:0},{q:"Landlocked?",o:["Yes","No"],c:0},{q:"Districts?",o:["28","20","30"],c:0},{q:"Zomba?",o:["Malawi","Zambia","Mozambique"],c:0},{q:"Mzuzu region?",o:["North","South","Centre"],c:0},{q:"Blantyre region?",o:["South","North","Centre"],c:0},{q:"Fruit?",o:["Mango","Stone","Wood"],c:0},{q:"Vegetable?",o:["Cabbage","Mango","Apple"],c:0},{q:"Banana?",o:["Yellow","Red","Blue"],c:0},{q:"Spider legs?",o:["8","6","4"],c:0},{q:"Bird?",o:["Eagle","Dog","Cat"],c:0},{q:"Milk?",o:["Cow","Dog","Chicken"],c:0},{q:"Kenya cap?",o:["Nairobi","Mombasa","Kisumu"],c:0},{q:"Senses?",o:["5","6","4"],c:0},{q:"Breathe?",o:["Oxygen","Carbon","Water"],c:0},{q:"Blood?",o:["Red","Blue","Green"],c:0},{q:"Biggest planet?",o:["Jupiter","Earth","Mars"],c:0},{q:"Closest sun?",o:["Mercury","Venus","Earth"],c:0},{q:"Lake Nyasa?",o:["Lake Nyasa","Victoria","Chad"],c:0},{q:"Not country?",o:["Lilongwe","Malawi","Zambia"],c:0},{q:"Sun flag?",o:["Yes","No"],c:0},{q:"Alphabet?",o:["26","24","28"],c:0},{q:"Airtel color?",o:["Red","Blue","Green"],c:0},{q:"TNM color?",o:["Blue","Red","Yellow"],c:0},{q:"Fish Eagle?",o:["Fish Eagle","Parrot","Dove"],c:0},{q:"Zikomo?",o:["Zikomo","Muli bwanji","Moni"],c:0},{q:"Moni?",o:["Moni","Zikomo","Pitani"],c:0},{q:"Nsima?",o:["Nsima","Rice","Bread"],c:0},{q:"Nsima from?",o:["Maize","Wheat","Rice"],c:0},{q:"Nigeria cap?",o:["Abuja","Lagos","Kano"],c:0},{q:"Egypt cap?",o:["Cairo","Alex","Giza"],c:0},{q:"2+2?",o:["4","5","6"],c:0},{q:"10x10?",o:["100","90","110"],c:0},{q:"20-5?",o:["15","10","20"],c:0},{q:"3x7?",o:["21","20","22"],c:0},{q:"9x9?",o:["81","80","82"],c:0},{q:"100/10?",o:["10","20","5"],c:0},{q:"50+50?",o:["100","90","110"],c:0},{q:"8+12?",o:["20","18","22"],c:0},{q:"15x2?",o:["30","25","35"],c:0},{q:"100-1?",o:["99","100","98"],c:0},{q:"12/3?",o:["4","3","6"],c:0},{q:"6x6?",o:["36","30","35"],c:0},{q:"7+8?",o:["15","14","16"],c:0},{q:"25+25?",o:["50","40","60"],c:0},{q:"60 sec?",o:["1 minute","1 hour","1 day"],c:0},{q:"24h?",o:["1 day","1 week","1 month"],c:0},{q:"365d?",o:["1 year","1 month","1 week"],c:0},{q:"11x11?",o:["121","111","122"],c:0},{q:"5x5?",o:["25","20","30"],c:0},{q:"1000/10?",o:["100","10","1000"],c:0},{q:"1+1?",o:["2","3","1"],c:0},{q:"10-10?",o:["0","1","10"],c:0},{q:"Bones?",o:["206","100","300"],c:0},{q:"9+9?",o:["18","19","20"],c:0},{q:"100-50?",o:["50","60","40"],c:0},{q:"Eyes?",o:["2","1","3"],c:0},{q:"Sky?",o:["Blue","Green","Red"],c:0},{q:"2x6?",o:["12","10","14"],c:0},{q:"Chambo?",o:["Chambo","Shark","Whale"],c:0},{q:"MK?",o:["MK","$","R"],c:0},{q:"Driving?",o:["Left","Right"],c:0},{q:"Mulungu?",o:["Mulungu","God","Zikomo"],c:0},{q:"KIA?",o:["Kamuzu","Chileka","Mzuzu"],c:0},{q:"Chileka?",o:["Chileka","Kamuzu","Karonga"],c:0}];
-function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;} shuffle(questions);
-function doFollow(){
- window.open('https://whatsapp.com/channel/0029Vb8qApVG3R3dB4zaQa1p','_blank');
- localStorage.setItem('followed','yes');
- followed=true;
- document.getElementById('followDone').style.display='block';
- document.getElementById('followCard').style.background='linear-gradient(135deg,#16a34a,#15803d)';
- setTimeout(()=>{updateAll();},1000);
+let users=JSON.parse(localStorage.getItem('cashnet_users')||'{}');
+let cur=localStorage.getItem('cashnet_current')||'';
+let siteLink="https://mateyufavour-source.github.io/CASH-NET/";
+let questions=[
+{q:"Capital of Malawi?",o:["Lilongwe","Blantyre","Mzuzu"],a:0},
+{q:"What is 2+2?",o:["3","4","5"],a:1},
+{q:"10 x 5 =?",o:["50","55","45"],a:0},
+{q:"1GB =? MB",o:["1000","1024","100"],a:1},
+{q:"CASH-NET fee?",o:["MK500","MK1000","MK100"],a:0},
+{q:"TNM Mpamba code?",o:["*444#","*211#","*202#"],a:0},
+{q:"Airtel Money code?",o:["*211#","*444#","*400#"],a:0},
+{q:"Admin number?",o:["0885801081","0985675470","0996"],a:0},
+{q:"Best earning app?",o:["CASH-NET","Facebook","TikTok"],a:0},
+{q:"Districts in Malawi?",o:["28","30","32"],a:0},
+{q:"Lake Malawi called?",o:["Lake of Stars","Victoria","Nyasa"],a:0},
+{q:"100 - 50 =?",o:["50","100","0"],a:0},
+{q:"President of Malawi?",o:["Chakwera","Mutharika","Banda"],a:0},
+{q:"Days in week?",o:["7","5","6"],a:0},
+{q:"9 x 9 =?",o:["81","72","90"],a:0},
+{q:"Independence?",o:["1964","1960","1970"],a:0},
+{q:"50+50=?",o:["100","150","200"],a:0},
+{q:"Sun rises?",o:["East","West","North"],a:0},
+{q:"60min=?",o:["1 hour","2 hours","30 min"],a:0},
+{q:"MK1000-500=?",o:["500","1000","0"],a:0},
+{q:"Green means?",o:["Go","Stop","Wait"],a:0},
+{q:"WhatsApp uses?",o:["Internet","Airtime","SMS"],a:0},
+{q:"Fastest?",o:["Both","Airtel","TNM"],a:0},
+{q:"12/2=?",o:["6","12","3"],a:0},
+{q:"25x4=?",o:["100","75","50"],a:0},
+{q:"Largest city?",o:["Blantyre","Lilongwe","Mzuzu"],a:0},
+{q:"Currency?",o:["Kwacha","Dollar","Rand"],a:0},
+{q:"2026-1=?",o:["2025","2026","2027"],a:0},
+{q:"How to earn?",o:["Quiz+Spin","Steal","Sleep"],a:0},
+{q:"Airtel 0985675470?",o:["Payment","Fake","Admin"],a:0}
+];
+let qIndex=0,timeLeft=10,tInt=null,adCount=0;
+
+let urlP=new URLSearchParams(location.search);
+let ap=urlP.get('activate');
+if(ap){if(!users[ap])users[ap]={pts:50};users[ap].active=true;users[ap].expiry=Date.now()+3*24*60*60*1000;localStorage.setItem('cashnet_users',JSON.stringify(users));localStorage.setItem('cashnet_current',ap);alert(ap+' Activated ✅');history.replaceState({},'',location.pathname);}
+let ref=urlP.get('ref');
+if(ref && ref!==cur){if(!users[ref])users[ref]={pts:50};users[ref].pts=(users[ref].pts||0)+50;localStorage.setItem('cashnet_users',JSON.stringify(users));}
+
+function login(){let ph=document.getElementById('phone').value.trim();if(ph.length<9)return alert('Enter number');cur=ph;localStorage.setItem('cashnet_current',ph);if(!users[ph])users[ph]={pts:50,active:false,expiry:0};localStorage.setItem('cashnet_users',JSON.stringify(users));check();}
+function check(){
+ if(!cur) return;
+ document.getElementById('loginBox').style.display='none';
+ checkExpiryAutoWA();
+ let u=users[cur];
+ let ok=u.active && u.expiry>Date.now() || cur==='0885801081';
+ if(ok){document.getElementById('mainBox').style.display='block';document.getElementById('pts').innerText=u.pts||0;document.getElementById('myLink').innerText=siteLink+'?ref='+cur;document.getElementById('statusTxt').innerText='✅ Active till '+new Date(u.expiry).toLocaleString(); startQ();}
+ else{document.getElementById('payBox').style.display='block';}
 }
-function updateAll(){
- let bal=points*2; document.getElementById('balTop').innerText=`MK${bal} | ${points} Pts | Today ${todayCount}/100`; document.getElementById('sPoints').innerText=points; document.getElementById('sBal').innerText="MK"+bal; document.getElementById('sToday').innerText=todayCount+"/100";
- saveToLeaderboard(); updateLeaderboard();
- if(activated){
-  document.getElementById('joinCard').style.display='none'; document.getElementById('pendingCard').style.display='none';
-  if(!followed){
-   document.getElementById('followCard').style.display='block'; document.getElementById('lockCard').style.display='block'; document.getElementById('quizCard').style.display='none'; document.getElementById('spinCard').style.display='none'; document.getElementById('wdCard').style.display='none';
-  } else {
-   document.getElementById('followCard').style.display='none'; document.getElementById('lockCard').style.display='none'; document.getElementById('quizCard').style.display='block'; document.getElementById('wdCard').style.display='block'; document.getElementById('spinCard').style.display='block'; document.getElementById('followDone').style.display='block';
-   checkSpin(); if(todayCount>=100){clearInterval(timerInt);document.getElementById('qTitle').style.display='none';document.getElementById('qOptions').style.display='none';document.getElementById('timerBar').style.display='none';document.getElementById('limitMsg').style.display='block';} else if(!timerInt) showQ();
-  }
- } else if(pending){
-  document.getElementById('joinCard').style.display='none'; document.getElementById('followCard').style.display='none'; document.getElementById('pendingCard').style.display='block'; document.getElementById('pendText').innerText=`Name: ${myName} | Phone: ${myPhone}`;
- } else {
-  if(followed){document.getElementById('followCard').style.display='none';} else {document.getElementById('followCard').style.display='block';}
+function startQ(){qIndex=0;showQ();}
+function showQ(){
+ if(qIndex>=questions.length) qIndex=0;
+ let qq=questions[qIndex];
+ document.getElementById('qText').innerText=(qIndex+1)+'. '+qq.q;
+ let o=document.getElementById('qOpts'); o.innerHTML='';
+ qq.o.forEach((op,i)=>{let b=document.createElement('button');b.className='btn btn-dark';b.innerText=op;b.onclick=()=>ans(i);o.appendChild(b);});
+ timeLeft=10; document.getElementById('timer').innerText=timeLeft; clearInterval(tInt);
+ tInt=setInterval(()=>{timeLeft--; document.getElementById('timer').innerText=timeLeft; if(timeLeft<=0){clearInterval(tInt); qIndex++; adCount++; if(adCount%3===0){alert('📢 Ad break - Support us');} showQ();}},1000);
+}
+function ans(i){
+ clearInterval(tInt);
+ let qq=questions[qIndex];
+ if(i===qq.a){users[cur].pts=(users[cur].pts||0)+10; document.getElementById('qRes').innerText='✅ +10';}
+ else{document.getElementById('qRes').innerText='❌ Wrong';}
+ localStorage.setItem('cashnet_users',JSON.stringify(users));
+ document.getElementById('pts').innerText=users[cur].pts;
+ qIndex++; adCount++; setTimeout(()=>{document.getElementById('qRes').innerText=''; if(adCount%3===0){alert('📢 Please view Ad above to continue');} showQ();},800);
+}
+function payWA(){window.open('https://wa.me/265885801081?text='+encodeURIComponent('Hi Admin, CASH-NET '+cur+' paid MK500, activate 3 days'));}
+function contactWA(){window.open('https://wa.me/265885801081?text=Hi Admin, help CASH-NET '+cur);}
+function shareWA(){let txt=`🔥 CASH-NET earn money! Join: ${siteLink}?ref=${cur}`; window.open('https://wa.me/?text='+encodeURIComponent(txt)); users[cur].pts+=20; localStorage.setItem('cashnet_users',JSON.stringify(users)); document.getElementById('pts').innerText=users[cur].pts;}
+function inviteWA(){let txt=`Join CASH-NET: ${siteLink}?ref=${cur}`; window.open('https://wa.me/?text='+encodeURIComponent(txt));}
+function checkExpiryAutoWA(){
+ if(!cur) return; let u=users[cur]; if(!u||!u.expiry) return;
+ let left=u.expiry-Date.now();
+ if(left<=0 && u.active){u.active=false; localStorage.setItem('cashnet_users',JSON.stringify(users)); setTimeout(()=>{if(confirm('⏰ Expired! Renew via WhatsApp?')){payWA();}},800);}
+ else if(left>0 && left<24*60*60*1000 && u.active){document.getElementById('statusTxt').innerHTML=`⚠️ Expires in ${Math.floor(left/1000/60/60)}h - <a href="#" onclick="payWA()" style="color:#fbbf24">Renew</a>`;}
+}
+function adminExpiryBroadcast(){
+ let all=JSON.parse(localStorage.getItem('cashnet_users')||'{}'); let expired=[];
+ for(let ph in all){if(all[ph].expiry && all[ph].expiry<Date.now() && all[ph].active) expired.push(ph);}
+ if(expired.length===0) return alert('No expired');
+ if(confirm(`WhatsApp ${expired.length} expired?`)){expired.forEach(ph=>{let wa=ph.startsWith('0')?'265'+ph.substring(1):ph; window.open(`https://wa.me/${wa}?text=`+encodeURIComponent('Hi, CASH-NET expired, renew MK500 Pay 0985675470 / 0885801081'),'_blank');});}
+}
+let taps=0; document.getElementById('logo').addEventListener('click',()=>{taps++; if(taps>=5){let pin=prompt('Admin PIN'); if(pin==='0885801081'){document.getElementById('adminBox').style.display='block'; renderUsers();} taps=0;} setTimeout(()=>taps=0,2000);});
+function adminAct(){let ph=document.getElementById('adminPhone').value.trim(); if(!ph)return; if(!users[ph])users[ph]={pts:50}; users[ph].active=true; users[ph].expiry=Date.now()+3*24*60*60*1000; localStorage.setItem('cashnet_users',JSON.stringify(users)); renderUsers(); alert(ph+' Activated ✅');}
+function renderUsers(){
+ let d=document.getElementById('userList'); d.innerHTML=''; let all=JSON.parse(localStorage.getItem('cashnet_users')||'{}'); users=all;
+ d.innerHTML=`<p style="color:#fbbf24">Total: ${Object.keys(all).length}</p>`;
+ for(let ph in all){
+  let u=all[ph]; let exp=u.expiry? new Date(u.expiry).toLocaleString():'Not Active'; let act=u.active&&u.expiry>Date.now()||ph==='0885801081'; let col=act?'#22c55e':'#ef4444';
+  let el=document.createElement('div'); el.style=`background:#0f172a;padding:10px;margin:5px 0;border-left:4px solid ${col};text-align:left;cursor:pointer`;
+  el.innerHTML=`<b>${ph}</b> - ${u.pts||0}pts<br><small>${exp}</small> <small style="color:${col}">${act?'ACTIVE':'BLOCKED'}</small><br><button onclick="event.stopPropagation();window.open('https://wa.me/${ph.startsWith('0')?'265'+ph.substring(1):ph}?text=Hi CASH-NET ${act?'ACTIVE':'EXPIRED'}','_blank')" style="background:#25D366;color:#fff;border:none;padding:5px 8px;border-radius:5px;margin-top:5px">WhatsApp</button> TAP TO ${act?'BLOCK':'ACTIVATE'}`;
+  el.onclick=()=>{if(act){if(confirm('Block '+ph)){all[ph].active=false; localStorage.setItem('cashnet_users',JSON.stringify(all)); renderUsers();}}else{if(confirm('Activate '+ph)){all[ph].active=true; all[ph].expiry=Date.now()+3*24*60*60*1000; localStorage.setItem('cashnet_users',JSON.stringify(all)); renderUsers();}}};
+  d.appendChild(el);
  }
 }
-let url=new URLSearchParams(window.location.search); let actPhone=url.get('activate'); let actKey=url.get('key'); if(actPhone && actKey=="FAVOUR500"){localStorage.setItem('activated','yes');localStorage.setItem('myPhone',actPhone);localStorage.setItem('pending','no');alert("✅ ACTIVATED! "+actPhone);location.href=location.pathname;}
-function adminTap(){tap++; if(tap>=5){let pin=prompt("PIN:"); if(pin=="0885801081"){document.getElementById('adminBox').style.display='block';} tap=0;}}
-function genLink(){let ph=document.getElementById('adminPhone').value; if(ph.length<9)return alert("Enter phone"); let link=`https://mateyufavour-source.github.io/CASH-NET/?activate=${ph}&key=FAVOUR500`; document.getElementById('genLinkOut').innerHTML=`Send to ${ph}:<br>${link}<br><br><button class='btn' style='background:#25D366;color:white' onclick="window.open('https://wa.me/${ph}?text=${encodeURIComponent('✅ Payment confirmed! Activate: '+link)}')">Send WhatsApp</button>`;}
-function doPaidWA(){let nm=document.getElementById('inName').value.trim(); let ph=document.getElementById('inPhone').value.trim(); let tx=document.getElementById('inTx').value.trim(); if(!nm){alert("Enter Name!");return;} if(ph.length<9){alert("Enter Phone!");return;} if(tx.length<3){alert("Enter Tx ID!");return;} localStorage.setItem('myPhone',ph); localStorage.setItem('myName',nm); localStorage.setItem('myTx',tx); localStorage.setItem('pending','yes'); saveToLeaderboard(); window.location.href=`https://wa.me/265885801081?text=🔔 PAYMENT 🔔%0AName: ${nm}%0APhone: ${ph}%0ATx: ${tx}%0AMK500`; }
-function openWAgain(){let ph=localStorage.getItem('myPhone'); let tx=localStorage.getItem('myTx'); window.open(`https://wa.me/265885801081?text=🔔 PAYMENT AGAIN Phone:${ph} Tx:${tx}`);}
-function saveToLeaderboard(){if(!myPhone) return; let lb=JSON.parse(localStorage.getItem('LEADERBOARD')||"[]"); if(lb.length<5){lb=[{phone:"0999123456",name:"Blessings Phiri",points:420,today:85},{phone:"0888123456",name:"Grace Banda",points:380,today:72},{phone:"0998234567",name:"Peter Mwale",points:310,today:60},{phone:"0887345678",name:"Chisomo Kaunda",points:250,today:50},{phone:"0996456789",name:"Mike Moyo",points:190,today:40}];} let idx=lb.findIndex(u=>u.phone==myPhone); if(idx>=0){lb[idx].points=points; lb[idx].today=todayPoints; lb[idx].name=myName||myPhone;} else{lb.push({phone:myPhone,name:myName||myPhone,points:points,today:todayPoints});} localStorage.setItem('LEADERBOARD',JSON.stringify(lb));}
-function updateLeaderboard(){let lb=JSON.parse(localStorage.getItem('LEADERBOARD')||"[]"); if(lbMode=='today') lb.sort((a,b)=> (b.today||0)-(a.today||0)); else lb.sort((a,b)=> b.points-a.points); let html=""; let myRank="-"; lb.slice(0,10).forEach((u,i)=>{let isMe=u.phone==myPhone; if(isMe) myRank=i+1; let cls=i==0?'top1':''; if(isMe) cls+=' me'; let score=lbMode=='today'? (u.today||0)+" pts" : u.points+" pts"; html+=`<div class="leader-row ${cls}"><span>${i==0?'🥇':i==1?'🥈':i==2?'🥉':i+1+'.'} ${u.name} - ${u.phone} ${isMe?'(You)':''}</span><span>${score}</span></div>`;}); document.getElementById('leaderList').innerHTML=html; document.getElementById('sRank').innerText=myRank!="-"?"#"+myRank:"-";}
-function showLB(mode){lbMode=mode; document.getElementById('tabToday').className=mode=='today'?'tab active':'tab'; document.getElementById('tabAll').className=mode=='all'?'tab active':'tab'; updateLeaderboard();}
-function showQ(){clearInterval(timerInt); if(todayCount>=100)return; timeLeft=10; let q=questions[qi%questions.length]; document.getElementById('qNum').innerText=`Q ${todayCount+1}/100`; document.getElementById('qTitle').style.display='block'; document.getElementById('qOptions').style.display='block'; document.getElementById('timerBar').style.display='block'; document.getElementById('qTitle').innerText=q.q; document.getElementById('qOptions').innerHTML=q.o.map((o,i)=>`<button class="qbtn" onclick="ans(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join(""); document.getElementById('timerBar').style.width="100%"; document.getElementById('qTimer').innerText=timeLeft+"s"; timerInt=setInterval(()=>{timeLeft--; document.getElementById('qTimer').innerText=timeLeft+"s"; document.getElementById('timerBar').style.width=(timeLeft*10)+"%"; if(timeLeft<=0){clearInterval(timerInt); todayCount++; qi++; localStorage.setItem('todayCount',todayCount); updateAll(); showQ();}},1000);}
-function ans(i){clearInterval(timerInt); let q=questions[qi%questions.length]; if(i==q.c){points++; todayPoints++; localStorage.setItem('todayPoints',todayPoints);} todayCount++; qi++; localStorage.setItem('points',points); localStorage.setItem('todayCount',todayCount); updateAll(); showQ();}
-function checkSpin(){if(lastSpin===today){document.getElementById('spinBtn').disabled=true;document.getElementById('spinBtn').innerText="Spun Today";document.getElementById('spinBtn').style.opacity="0.5";}}
-function doSpin(){if(lastSpin===today)return; let prizes=[10,20,30,50,20,100]; let win=prizes[Math.floor(Math.random()*prizes.length)]; let deg=Math.floor(Math.random()*360)+720; document.getElementById('wheel').style.transform=`rotate(${deg}deg)`; document.getElementById('spinBtn').disabled=true; setTimeout(()=>{let pts=win/2; points+=pts; todayPoints+=pts; localStorage.setItem('points',points); localStorage.setItem('todayPoints',todayPoints); localStorage.setItem('lastSpin',today); alert(`🎉 Won MK${win}!`); updateAll(); checkSpin();},3100);}
-function doWithdraw(){let num=document.getElementById('wdNum').value; let amt=parseInt(document.getElementById('wdAmt').value); if(!num||!amt)return alert("Fill all"); if(points*2<amt)return alert("No bal"); if(amt<1000)return alert("Min 1000"); window.open(`https://wa.me/265885801081?text=WITHDRAW Phone:${myPhone} Name:${myName} To:${num} Amt:MK${amt}`); points-=amt/2; localStorage.setItem('points',points); updateAll();}
-updateAll(); showLB('today');
-if(followed){document.getElementById('followDone').style.display='block';}
+function copyLink(){let ph=document.getElementById('adminPhone').value.trim(); if(!ph)return alert('Enter phone'); let l=location.origin+location.pathname+'?activate='+ph; navigator.clipboard.writeText(l); alert('Copied: '+l);}
+
+// OFFLINE BLOCK
+function checkOnline(){if(!navigator.onLine){document.getElementById('offlineBox').style.display='flex';}else{document.getElementById('offlineBox').style.display='none';}}
+setInterval(checkOnline,2000);
+window.addEventListener('online',()=>{document.getElementById('offlineBox').style.display='none'; location.reload();});
+window.addEventListener('offline',()=>{document.getElementById('offlineBox').style.display='flex';});
+check(); checkOnline();
 </script>
 </body>
 </html>
