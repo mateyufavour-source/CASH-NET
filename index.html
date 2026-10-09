@@ -3,26 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CASH-NET PRO</title>
+<title>CASH-NET PRO - 150 Questions</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <style>
 *{font-family:Arial;margin:0;padding:0;box-sizing:border-box}
 body{background:#0f172a;color:white;min-height:100vh}
 .header{background:#1e293b;padding:12px;text-align:center;border-bottom:3px solid #16a34a;position:sticky;top:0;z-index:10}
 .logo{font-size:24px;font-weight:800;cursor:pointer}
 .container{max-width:520px;margin:auto;padding:12px}
-.card{background:white;color:#0f172a;padding:16px;border-radius:16px;margin:10px 0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.card{background:white;color:#0f172a;padding:16px;border-radius:16px;margin:10px 0;animation:slideUp 0.4s ease}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .stat{color:white;padding:12px;border-radius:12px;text-align:center}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;font-weight:800;font-size:13px;margin:5px 0;cursor:pointer}
+.stat h2{font-size:16px}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;font-weight:800;font-size:13px;margin:5px 0;cursor:pointer;transition:0.1s}
+.btn:active{transform:scale(0.95)}
 .btn-wa{background:#25D366;color:white}
 .btn-dark{background:#0f172a;color:white}
 .btn-gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:black}
 input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin:5px 0}
-.qbtn{background:#e2e8f0;color:#0f172a;padding:12px;margin:4px 0;border-radius:10px;width:100%;border:none;font-weight:600;text-align:left;font-size:14px}
-.qbtn:disabled{opacity:0.4}
+.qbtn{background:#e2e8f0;color:#0f172a;padding:12px;margin:4px 0;border-radius:10px;width:100%;border:none;font-weight:600;text-align:left;font-size:14px;transition:0.2s;cursor:pointer}
+.qbtn:hover{background:#cbd5e1;transform:translateX(5px)}
 .progress{height:8px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:8px 0}
 .progress-bar{height:100%;background:#16a34a;width:0%;transition:0.3s}
-#timerBar{height:6px;background:#ef4444;width:100%;border-radius:20px;margin:6px 0;transition:width 1s linear}
+#timerBar{height:6px;background:#ef4444;width:100%;transition:width 1s linear;border-radius:20px;margin:6px 0}
+.wheel-box{text-align:center}
 #wheel{width:180px;height:180px;border-radius:50%;border:5px solid #f59e0b;margin:8px auto;background:conic-gradient(#16a34a 0deg 60deg,#0ea5e9 60deg 120deg,#f59e0b 120deg 180deg,#8b5cf6 180deg 240deg,#ef4444 240deg 300deg,#10b981 300deg 360deg);transition:transform 3s cubic-bezier(0.2,0.8,0.2,1);position:relative}
 #wheel::after{content:'▲';position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:20px;color:#f59e0b}
 .leader-row{display:flex;justify-content:space-between;padding:8px 10px;border-radius:8px;margin:4px 0;background:#f1f5f9;font-size:12px}
@@ -32,12 +36,16 @@ input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin:5p
 .tab{flex:1;padding:8px;border-radius:8px;border:none;background:#e2e8f0;font-weight:700;font-size:12px}
 .tab.active{background:#0f172a;color:white}
 .locked{background:linear-gradient(135deg,#ef4444,#dc2626);color:white;text-align:center;padding:20px;border-radius:16px;margin:10px 0}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1}}
 </style>
 </head>
 <body>
+<div id="feedback" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;color:black;padding:30px 40px;border-radius:20px;font-size:26px;font-weight:800;z-index:9999;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.6)"></div>
+
 <div class="header">
-<div class="logo" onclick="adminTap()">💰 CASH-NET <span style="background:#25D366;padding:2px 8px;border-radius:12px;font-size:11px">FOLLOW REQUIRED</span></div>
-<div id="balTop" style="font-size:11px;margin-top:3px">MK0 | 0 Pts | Today 0/100</div>
+<div class="logo" onclick="adminTap()">💰 CASH-NET <span style="background:#25D366;padding:2px 8px;border-radius:12px;font-size:11px">150 Qs</span></div>
+<div id="greeting" style="font-size:12px;color:#f59e0b;font-weight:700;margin-top:4px"></div>
+<div id="balTop" style="font-size:11px;margin-top:3px">MK0 | 0 Pts</div>
 </div>
 <div class="container">
 <div class="stats">
@@ -45,17 +53,18 @@ input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin:5p
 <div class="stat" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)"><h2 id="sBal">MK0</h2><p>BAL</p></div>
 <div class="stat" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><h2 id="sToday">0/100</h2><p>TODAY</p></div>
 <div class="stat" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)"><h2 id="sRank">-</h2><p>RANK</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#ec4899,#be185d)"><h2 id="sLevel">1</h2><p>LEVEL</p></div>
+<div class="stat" style="background:linear-gradient(135deg,#ef4444,#dc2626)"><h2 id="sStreak">0🔥</h2><p>STREAK</p></div>
 </div>
 
 <div class="card" id="followCard" style="background:linear-gradient(135deg,#25D366,#128C7E);color:white;text-align:center;border:3px solid white">
 <h2>📢 STEP 2: Follow Channel!</h2>
-<p style="font-size:13px;margin:8px 0">You must follow our WhatsApp Channel to play quiz & earn!</p>
-<button class="btn" style="background:white;color:#128C7E;font-size:16px" onclick="doFollow()">✅ FOLLOW CHANNEL NOW</button>
-<p style="font-size:11px;margin-top:8px">👆 Click → Follow → Return → Quiz Unlocks!</p>
-<div id="followDone" style="display:none;background:white;color:#128C7E;padding:8px;border-radius:8px;margin-top:10px;font-weight:800">✅ Followed! Quiz unlocked!</div>
+<p style="font-size:13px;margin:8px 0">Follow WhatsApp Channel to unlock quiz!</p>
+<button class="btn" style="background:white;color:#128C7E;font-size:16px" onclick="doFollow()">✅ FOLLOW NOW</button>
+<div id="followDone" style="display:none;background:white;color:#128C7E;padding:8px;border-radius:8px;margin-top:10px;font-weight:800">✅ Followed!</div>
 </div>
 
-<div class="card" id="lockCard" style="display:none"><div class="locked"><h2>🔒 Quiz Locked!</h2><p>Follow WhatsApp Channel first to unlock!</p><button class="btn" style="background:white;color:#ef4444;margin-top:10px" onclick="doFollow()">FOLLOW NOW</button></div></div>
+<div class="card" id="lockCard" style="display:none"><div class="locked"><h2>🔒 Locked!</h2><button class="btn" style="background:white;color:#ef4444;margin-top:10px" onclick="doFollow()">FOLLOW NOW</button></div></div>
 
 <div class="card" id="leaderCard">
 <div style="display:flex;justify-content:space-between;align-items:center"><h3>🏆 Leaderboard</h3><button class="btn" style="width:auto;padding:6px 10px;font-size:11px;background:#0f172a;color:white" onclick="updateLeaderboard()">Refresh</button></div>
@@ -71,123 +80,235 @@ input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin:5p
 </div>
 
 <div class="card" id="pendingCard" style="display:none"><div style="background:#fef3c7;padding:12px;border-radius:12px;text-align:center"><h3>⏳ PENDING</h3><p id="pendText"></p><button class="btn btn-wa" onclick="openWAgain()">WhatsApp Again</button><button class="btn btn-dark" onclick="localStorage.clear();location.reload()">Change</button></div></div>
-<div class="card" id="spinCard" style="display:none"><div style="text-align:center"><h3>🎡 Daily Spin</h3><div id="wheel"></div><p id="spinStatus">1 spin today!</p><button class="btn btn-gold" id="spinBtn" onclick="doSpin()">SPIN NOW 🎡</button></div></div>
+<div class="card" id="spinCard" style="display:none"><div class="wheel-box"><h3>🎡 Daily Spin</h3><div id="wheel"></div><p id="spinStatus">1 spin today!</p><button class="btn btn-gold" id="spinBtn" onclick="doSpin()">SPIN NOW 🎡</button></div></div>
 <div class="card" id="quizCard" style="display:none">
-<div style="display:flex;justify-content:space-between;font-size:11px"><span id="qNum">Q 1/100</span><span id="qTimer" style="color:#ef4444;font-weight:800">10s</span></div>
+<div style="display:flex;justify-content:space-between;font-size:11px"><span id="qNum">Q 1/100</span><span id="qTimer" style="color:#ef4444;font-weight:800">10s</span><span id="streakShow" style="color:#f59e0b;font-weight:800">🔥0</span></div>
 <div class="progress"><div class="progress-bar" id="pBar"></div></div><div id="timerBar"></div>
 <h3 id="qTitle"></h3><div id="qOptions"></div>
-<p id="qRes" style="text-align:center;font-weight:800;margin:8px"></p>
-<div id="limitMsg" style="display:none;text-align:center;color:red"><h3>🎉 100/100 Done!</h3></div>
+<div id="limitMsg" style="display:none;text-align:center;color:red"><h3>🎉 100/100 Done! 🏆</h3></div>
 </div>
 <div class="card" id="wdCard" style="display:none"><h3>💸 Withdraw Min MK1000</h3><input id="wdNum" placeholder="Number"><input id="wdAmt" type="number" placeholder="Amount"><button class="btn btn-dark" onclick="doWithdraw()">Request</button></div>
-<div class="card" id="adminBox" style="display:none;background:#1e293b;color:white;border:2px solid #f59e0b"><h2>👑 ADMIN</h2><input id="adminPhone" placeholder="User phone"><button class="btn" style="background:#25D366;color:white" onclick="genLink()">Generate Link</button><div id="genLinkOut" style="background:#0f172a;padding:8px;border-radius:8px;margin:8px 0;word-break:break-all;font-size:11px"></div><button class="btn btn-dark" onclick="document.getElementById('adminBox').style.display='none'">Exit</button></div>
+<div class="card" id="adminBox" style="display:none;background:#1e293b;color:white;border:2px solid #f59e0b"><h2>👑 ADMIN</h2><input id="adminPhone" placeholder="User phone"><button class="btn" style="background:#25D366;color:white" onclick="genLink()">Generate Link</button><div id="genLinkOut" style="background:#0f172a;padding:8px;border-radius:8px;margin:8px 0;word-break:break-all;font-size:11px"></div><button class="btn btn-dark" onclick="location.href=location.pathname">Exit</button></div>
 </div>
 <script>
-let points=parseInt(localStorage.getItem('points')||0); let todayCount=parseInt(localStorage.getItem('todayCount')||0); let todayPoints=parseInt(localStorage.getItem('todayPoints')||0); let lastDate=localStorage.getItem('lastDate')||""; let today=new Date().toDateString(); if(lastDate!==today){todayCount=0; todayPoints=0; localStorage.setItem('todayCount',0); localStorage.setItem('todayPoints',0); localStorage.setItem('lastDate',today);} localStorage.setItem('lastDate',today); let activated=localStorage.getItem('activated')=="yes"; let myPhone=localStorage.getItem('myPhone')||""; let myName=localStorage.getItem('myName')||""; let pending=localStorage.getItem('pending')=="yes"; let followed=localStorage.getItem('followed')=="yes"; let lastSpin=localStorage.getItem('lastSpin')||""; let tap=0; let qi=todayCount; let timeLeft=10; let timerInt=null; let lbMode='today'; let answered=false;
-let questions=[{q:"Capital of Malawi?",o:["Lilongwe","Blantyre","Mzuzu"],c:0},{q:"Currency?",o:["Kwacha","Dollar","Rand"],c:0},{q:"Lake?",o:["Lake Malawi","Victoria","Chad"],c:0},{q:"Independence?",o:["1964","1960","1970"],c:0},{q:"Regions?",o:["3","4","5"],c:0},{q:"Largest city?",o:["Lilongwe","Zomba","Karonga"],c:0},{q:"President 2024?",o:["Chakwera","Mutharika","Banda"],c:0},{q:"First President?",o:["Banda","Bingu","Chakwera"],c:0},{q:"River?",o:["Shire","Nile","Zambezi"],c:0},{q:"Park?",o:["Liwonde","Serengeti","Kruger"],c:0},{q:"Flag?",o:["Black Red Green","Red White Blue","Green Yellow"],c:0},{q:"Language?",o:["Chichewa","Swahili","Zulu"],c:0},{q:"Continent?",o:["Africa","Asia","Europe"],c:0},{q:"Zambia cap?",o:["Lusaka","Harare","Maputo"],c:0},{q:"Tanzania cap?",o:["Dodoma","Dar","Nairobi"],c:0},{q:"Mozambique cap?",o:["Maputo","Lusaka","Lilongwe"],c:0},{q:"Largest lake?",o:["Victoria","Malawi","Tanganyika"],c:0},{q:"Longest river?",o:["Nile","Shire","Congo"],c:0},{q:"Days week?",o:["7","6","5"],c:0},{q:"Months?",o:["12","10","11"],c:0},{q:"Sun rises?",o:["East","West","North"],c:0},{q:"Water?",o:["H2O","CO2","O2"],c:0},{q:"Bees?",o:["Honey","Milk","Oil"],c:0},{q:"Fastest?",o:["Cheetah","Lion","Elephant"],c:0},{q:"Largest animal?",o:["Blue Whale","Elephant","Lion"],c:0},{q:"Rainbow?",o:["7","6","8"],c:0},{q:"USA cap?",o:["Washington","New York","Texas"],c:0},{q:"UK cap?",o:["London","Paris","Berlin"],c:0},{q:"China cap?",o:["Beijing","Shanghai","Tokyo"],c:0},{q:"Malawi team?",o:["Flames","Chipolopolo","Bafana"],c:0},{q:"Players?",o:["11","10","12"],c:0},{q:"World Cup 2022?",o:["Argentina","France","Brazil"],c:0},{q:"Madzi?",o:["Madzi","Moto","Dzuwa"],c:0},{q:"Moto?",o:["Moto","Madzi","Nyumba"],c:0},{q:"Ocean?",o:["Pacific","Atlantic","Indian"],c:0},{q:"Smallest country?",o:["Vatican","Malawi","Lesotho"],c:0},{q:"Landlocked?",o:["Yes","No"],c:0},{q:"Districts?",o:["28","20","30"],c:0},{q:"Zomba?",o:["Malawi","Zambia","Mozambique"],c:0},{q:"Mzuzu region?",o:["North","South","Centre"],c:0},{q:"Blantyre region?",o:["South","North","Centre"],c:0},{q:"Fruit?",o:["Mango","Stone","Wood"],c:0},{q:"Vegetable?",o:["Cabbage","Mango","Apple"],c:0},{q:"Banana?",o:["Yellow","Red","Blue"],c:0},{q:"Spider legs?",o:["8","6","4"],c:0},{q:"Bird?",o:["Eagle","Dog","Cat"],c:0},{q:"Milk?",o:["Cow","Dog","Chicken"],c:0},{q:"Kenya cap?",o:["Nairobi","Mombasa","Kisumu"],c:0},{q:"Senses?",o:["5","6","4"],c:0},{q:"Breathe?",o:["Oxygen","Carbon","Water"],c:0},{q:"Blood?",o:["Red","Blue","Green"],c:0},{q:"Biggest planet?",o:["Jupiter","Earth","Mars"],c:0},{q:"Closest sun?",o:["Mercury","Venus","Earth"],c:0},{q:"Lake Nyasa?",o:["Lake Nyasa","Victoria","Chad"],c:0},{q:"Not country?",o:["Lilongwe","Malawi","Zambia"],c:0},{q:"Sun flag?",o:["Yes","No"],c:0},{q:"Alphabet?",o:["26","24","28"],c:0},{q:"Airtel color?",o:["Red","Blue","Green"],c:0},{q:"TNM color?",o:["Blue","Red","Yellow"],c:0},{q:"Fish Eagle?",o:["Fish Eagle","Parrot","Dove"],c:0},{q:"Zikomo?",o:["Zikomo","Muli bwanji","Moni"],c:0},{q:"Moni?",o:["Moni","Zikomo","Pitani"],c:0},{q:"Nsima?",o:["Nsima","Rice","Bread"],c:0},{q:"Nsima from?",o:["Maize","Wheat","Rice"],c:0},{q:"Nigeria cap?",o:["Abuja","Lagos","Kano"],c:0},{q:"Egypt cap?",o:["Cairo","Alex","Giza"],c:0},{q:"2+2?",o:["4","5","6"],c:0},{q:"10x10?",o:["100","90","110"],c:0},{q:"20-5?",o:["15","10","20"],c:0},{q:"3x7?",o:["21","20","22"],c:0},{q:"9x9?",o:["81","80","82"],c:0},{q:"100/10?",o:["10","20","5"],c:0},{q:"50+50?",o:["100","90","110"],c:0},{q:"8+12?",o:["20","18","22"],c:0},{q:"15x2?",o:["30","25","35"],c:0},{q:"100-1?",o:["99","100","98"],c:0},{q:"12/3?",o:["4","3","6"],c:0},{q:"6x6?",o:["36","30","35"],c:0},{q:"7+8?",o:["15","14","16"],c:0},{q:"25+25?",o:["50","40","60"],c:0},{q:"60 sec?",o:["1 minute","1 hour","1 day"],c:0},{q:"24h?",o:["1 day","1 week","1 month"],c:0},{q:"365d?",o:["1 year","1 month","1 week"],c:0},{q:"11x11?",o:["121","111","122"],c:0},{q:"5x5?",o:["25","20","30"],c:0},{q:"1000/10?",o:["100","10","1000"],c:0},{q:"1+1?",o:["2","3","1"],c:0},{q:"10-10?",o:["0","1","10"],c:0},{q:"Bones?",o:["206","100","300"],c:0},{q:"9+9?",o:["18","19","20"],c:0},{q:"100-50?",o:["50","60","40"],c:0},{q:"Eyes?",o:["2","1","3"],c:0},{q:"Sky?",o:["Blue","Green","Red"],c:0},{q:"2x6?",o:["12","10","14"],c:0},{q:"Chambo?",o:["Chambo","Shark","Whale"],c:0},{q:"MK?",o:["MK","$","R"],c:0},{q:"Driving?",o:["Left","Right"],c:0},{q:"Mulungu?",o:["Mulungu","God","Zikomo"],c:0},{q:"KIA?",o:["Kamuzu","Chileka","Mzuzu"],c:0},{q:"Chileka?",o:["Chileka","Kamuzu","Karonga"],c:0}];
+let points=parseInt(localStorage.getItem('points')||0); let todayCount=parseInt(localStorage.getItem('todayCount')||0); let todayPoints=parseInt(localStorage.getItem('todayPoints')||0); let lastDate=localStorage.getItem('lastDate')||""; let today=new Date().toDateString(); if(lastDate!==today){todayCount=0; todayPoints=0; localStorage.setItem('todayCount',0); localStorage.setItem('todayPoints',0); localStorage.setItem('lastDate',today);} localStorage.setItem('lastDate',today); let activated=localStorage.getItem('activated')=="yes"; let myPhone=localStorage.getItem('myPhone')||""; let myName=localStorage.getItem('myName')||""; let pending=localStorage.getItem('pending')=="yes"; let followed=localStorage.getItem('followed')=="yes"; let lastSpin=localStorage.getItem('lastSpin')||""; let tap=0; let qi=todayCount; let timeLeft=10; let timerInt=null; let lbMode='today'; let answered=false; let streak=parseInt(localStorage.getItem('streak')||0);
+let correctSound = new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg');
+let wrongSound = new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
+
+// FULL 150 QUESTIONS LIST
+let questions=[
+{q:"Capital of Malawi?",o:["Lilongwe","Blantyre","Mzuzu"],c:0},
+{q:"Malawi Currency?",o:["Kwacha","Dollar","Rand"],c:0},
+{q:"Big Lake in Malawi?",o:["Lake Malawi","Lake Victoria","Lake Chad"],c:0},
+{q:"Independence Year?",o:["1964","1960","1970"],c:0},
+{q:"How many Regions?",o:["3","4","5"],c:0},
+{q:"Largest city?",o:["Lilongwe","Zomba","Karonga"],c:0},
+{q:"First President?",o:["Kamuzu Banda","Bingu","Chakwera"],c:0},
+{q:"Longest River?",o:["Shire","Nile","Zambezi"],c:0},
+{q:"National Park?",o:["Liwonde","Serengeti","Kruger"],c:0},
+{q:"Official Language?",o:["Chichewa & English","Swahili","Zulu"],c:0},
+{q:"Continent of Malawi?",o:["Africa","Asia","Europe"],c:0},
+{q:"Zambia Capital?",o:["Lusaka","Harare","Maputo"],c:0},
+{q:"Tanzania Capital?",o:["Dodoma","Dar","Nairobi"],c:0},
+{q:"Mozambique Capital?",o:["Maputo","Lusaka","Lilongwe"],c:0},
+{q:"Days in Week?",o:["7","6","5"],c:0},
+{q:"Months in Year?",o:["12","10","11"],c:0},
+{q:"Sun rises from?",o:["East","West","North"],c:0},
+{q:"Chemical of Water?",o:["H2O","CO2","O2"],c:0},
+{q:"Fastest Animal?",o:["Cheetah","Lion","Elephant"],c:0},
+{q:"Largest Animal?",o:["Blue Whale","Elephant","Lion"],c:0},
+{q:"Colors in Rainbow?",o:["7","6","8"],c:0},
+{q:"USA Capital?",o:["Washington DC","New York","Texas"],c:0},
+{q:"UK Capital?",o:["London","Paris","Berlin"],c:0},
+{q:"Flames means?",o:["Malawi Football Team","Zambia Team","SA Team"],c:0},
+{q:"Players in Football?",o:["11","10","12"],c:0},
+{q:"World Cup 2022 Winner?",o:["Argentina","France","Brazil"],c:0},
+{q:"Malawi Districts?",o:["28","20","30"],c:0},
+{q:"Mzuzu in which Region?",o:["North","South","Centre"],c:0},
+{q:"Blantyre Region?",o:["South","North","Centre"],c:0},
+{q:"Spider Legs?",o:["8","6","4"],c:0},
+{q:"Kenya Capital?",o:["Nairobi","Mombasa","Kisumu"],c:0},
+{q:"Human Senses?",o:["5","6","4"],c:0},
+{q:"We breathe?",o:["Oxygen","Carbon","Water"],c:0},
+{q:"Blood Color?",o:["Red","Blue","Green"],c:0},
+{q:"Biggest Planet?",o:["Jupiter","Earth","Mars"],c:0},
+{q:"Airtel Money Code?",o:["*211#","*100#","*305#"],c:0},
+{q:"TNM Mpamba Code?",o:["*305#","*211#","*100#"],c:0},
+{q:"Nsima made from?",o:["Maize","Wheat","Rice"],c:0},
+{q:"2+2=?",o:["4","5","6"],c:0},
+{q:"10x10=?",o:["100","90","110"],c:0},
+{q:"What is Madzi?",o:["Water","Fire","House"],c:0},
+{q:"What is Moto?",o:["Fire","Water","House"],c:0},
+{q:"Nigeria Capital?",o:["Abuja","Lagos","Kano"],c:0},
+{q:"Egypt Capital?",o:["Cairo","Alex","Giza"],c:0},
+{q:"Malawi National Bird?",o:["Fish Eagle","Parrot","Dove"],c:0},
+{q:"Thank you in Chichewa?",o:["Zikomo","Moni","Pitani"],c:0},
+{q:"Hello in Chichewa?",o:["Moni","Zikomo","Pitani"],c:0},
+{q:"Chambo is?",o:["Fish","Shark","Whale"],c:0},
+{q:"Malawi drives which side?",o:["Left","Right"],c:0},
+{q:"Kamuzu Airport is in?",o:["Lilongwe","Blantyre","Mzuzu"],c:0},
+{q:"Chileka Airport is in?",o:["Blantyre","Lilongwe","Mzuzu"],c:0},
+// NEW 100 ADDED QUESTIONS
+{q:"Who composed Malawi National Anthem?",o:["Michael Sauka","Lucius Banda","Wambali"],c:0},
+{q:"What is the meaning of Malawi?",o:["Flames","Light","Water"],c:0},
+{q:"Which is Currency of Zambia?",o:["Kwacha","Dollar","Shilling"],c:0},
+{q:"Which Mountain is highest in Malawi?",o:["Mulanje","Zomba","Viphya"],c:0},
+{q:"What is main export of Malawi?",o:["Tobacco","Gold","Oil"],c:0},
+{q:"Lake Malawi also called?",o:["Lake Nyasa","Lake Tanganyika","Lake Victoria"],c:0},
+{q:"What year was MCP founded?",o:["1959","1964","1994"],c:0},
+{q:"How many stars on old Malawi flag?",o:["1 Sun","2 Stars","3 Stars"],c:0},
+{q:"Which tribe is largest in Malawi?",o:["Chewa","Tumbuka","Yao"],c:0},
+{q:"What is Kasungu known for?",o:["National Park","Lake","Mountain"],c:0},
+{q:"Which country borders Malawi North?",o:["Tanzania","Mozambique","Zimbabwe"],c:0},
+{q:"What does TNM stand for?",o:["Telekom Networks Malawi","Total Network","Tele Mobile"],c:0},
+{q:"What color is Airtel?",o:["Red","Blue","Yellow"],c:0},
+{q:"What is 5x5?",o:["25","20","30"],c:0},
+{q:"1000 divided by 10?",o:["100","10","1000"],c:0},
+{q:"What is 50+50?",o:["100","90","110"],c:0},
+{q:"What is 9x9?",o:["81","80","82"],c:0},
+{q:"What is 100-1?",o:["99","100","98"],c:0},
+{q:"Human has how many bones?",o:["206","100","300"],c:0},
+{q:"How many eyes?",o:["2","1","3"],c:0},
+{q:"Sky color?",o:["Blue","Green","Red"],c:0},
+{q:"Cow gives?",o:["Milk","Honey","Eggs"],c:0},
+{q:"Chicken gives?",o:["Eggs","Milk","Wool"],c:0},
+{q:"Largest ocean?",o:["Pacific","Atlantic","Indian"],c:0},
+{q:"Smallest country?",o:["Vatican","Malawi","Lesotho"],c:0},
+{q:"Is Malawi landlocked?",o:["Yes","No"],c:0},
+{q:"Zomba was old?",o:["Capital","Village","District"],c:0},
+{q:"Which fruit is yellow?",o:["Banana","Apple","Orange"],c:0},
+{q:"Eagle is a?",o:["Bird","Dog","Cat"],c:0},
+{q:"Second largest city?",o:["Blantyre","Lilongwe","Mzuzu"],c:0},
+{q:"What is K1000 in Chichewa?",o:["One thousand","One hundred","Ten thousand"],c:0},
+{q:"Who is famous musician Lucius?",o:["Banda","Mutharika","Chakwera"],c:0},
+{q:"What is Chichewa for food?",o:["Chakudya","Madzi","Moto"],c:0},
+{q:"What is Nyumba?",o:["House","Water","Fire"],c:0},
+{q:"How many letters alphabet?",o:["26","24","28"],c:0},
+{q:"Google is for?",o:["Search","Cooking","Driving"],c:0},
+{q:"WhatsApp color?",o:["Green","Blue","Red"],c:0},
+{q:"Facebook color?",o:["Blue","Green","Red"],c:0},
+{q:"What is 3x7?",o:["21","20","22"],c:0},
+{q:"What is 20-5?",o:["15","10","20"],c:0},
+{q:"What is 12/3?",o:["4","3","6"],c:0},
+{q:"What is 6x6?",o:["36","30","35"],c:0},
+{q:"7+8=?",o:["15","14","16"],c:0},
+{q:"60 seconds is?",o:["1 minute","1 hour","1 day"],c:0},
+{q:"24 hours is?",o:["1 day","1 week","1 month"],c:0},
+{q:"365 days is?",o:["1 year","1 month","1 week"],c:0},
+{q:"Which is not country?",o:["Lilongwe","Malawi","Zambia"],c:0},
+{q:"Which is fish?",o:["Chambo","Lion","Elephant"],c:0},
+{q:"Which is animal?",o:["Lion","Mango","Car"],c:0},
+{q:"Which is fruit?",o:["Mango","Stone","Wood"],c:0},
+{q:"Bees make?",o:["Honey","Milk","Oil"],c:0},
+{q:"Closest planet to sun?",o:["Mercury","Venus","Earth"],c:0},
+{q:"Earth is?",o:["Planet","Star","Moon"],c:0},
+{q:"Moon is?",o:["Satellite","Star","Planet"],c:0},
+{q:"Sun is?",o:["Star","Planet","Moon"],c:0},
+{q:"Malawi flag colors?",o:["Black Red Green","Red White Blue","Green Yellow"],c:0},
+{q:"Lilongwe river?",o:["Lilongwe River","Shire","Rukuru"],c:0},
+{q:"Malawi famous tea place?",o:["Thyolo","Kasungu","Karonga"],c:0},
+{q:"Karonga is in?",o:["North","South","Centre"],c:0},
+{q:"Mangochi is in?",o:["South","North","Centre"],c:0},
+{q:"Dedza is in?",o:["Centre","South","North"],c:0},
+{q:"What is 1+1?",o:["2","3","1"],c:0},
+{q:"What is 10-10?",o:["0","1","10"],c:0},
+{q:"What is 11x11?",o:["121","111","122"],c:0},
+{q:"What is 100-50?",o:["50","60","40"],c:0},
+{q:"25+25=?",o:["50","40","60"],c:0},
+{q:"8+12=?",o:["20","18","22"],c:0},
+{q:"15x2=?",o:["30","25","35"],c:0},
+{q:"MK means?",o:["Malawi Kwacha","Money Kwacha","Malawi King"],c:0},
+{q:"God in Chichewa?",o:["Mulungu","Zikomo","Moni"],c:0},
+{q:"Water in Chichewa is Madzi?",o:["Yes","No"],c:0},
+{q:"How many legs cow?",o:["4","2","6"],c:0},
+{q:"How many legs chicken?",o:["2","4","6"],c:0},
+{q:"What is fastest bird?",o:["Falcon","Eagle","Dove"],c:0},
+{q:"What is national tree Malawi?",o:["Mulanje Cedar","Baobab","Mango"],c:0},
+{q:"When is Christmas?",o:["25 Dec","1 Jan","1 June"],c:0},
+{q:"When is New Year?",o:["1 Jan","25 Dec","6 July"],c:0},
+{q:"Malawi Independence Day?",o:["6 July","1 Jan","25 Dec"],c:0},
+{q:"What is 2x6?",o:["12","10","14"],c:0},
+{q:"What is 100/10?",o:["10","20","5"],c:0},
+{q:"What grows underground?",o:["Cassava","Mango","Apple"],c:0},
+{q:"Which is vegetable?",o:["Cabbage","Mango","Banana"],c:0},
+{q:"What is capital of SA?",o:["Pretoria","Cape Town","Johannesburg"],c:0},
+{q:"What is capital of Zimbabwe?",o:["Harare","Bulawayo","Mutare"],c:0},
+{q:"What is 0+5?",o:["5","0","10"],c:0},
+{q:"What is 1x100?",o:["100","1","0"],c:0},
+{q:"What color is banana ripe?",o:["Yellow","Red","Blue"],c:0},
+{q:"What color is apple?",o:["Red","Blue","Yellow"],c:0},
+{q:"Which animal barks?",o:["Dog","Cat","Cow"],c:0},
+{q:"Which animal meows?",o:["Cat","Dog","Lion"],c:0},
+{q:"Lion is king of?",o:["Jungle","Water","Sky"],c:0},
+{q:"Fish lives in?",o:["Water","Sky","Land"],c:0}
+];
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;} shuffle(questions);
-
-function doFollow(){window.open('https://whatsapp.com/channel/0029Vb8qApVG3R3dB4zaQa1p','_blank'); localStorage.setItem('followed','yes'); followed=true; document.getElementById('followDone').style.display='block'; document.getElementById('followCard').style.background='linear-gradient(135deg,#16a34a,#15803d)'; setTimeout(()=>{updateAll();},800);}
-
+function doFollow(){ window.open('https://whatsapp.com/channel/0029Vb8qApVG3R3dB4zaQa1p','_blank'); localStorage.setItem('followed','yes'); followed=true; document.getElementById('followDone').style.display='block'; document.getElementById('followCard').style.background='linear-gradient(135deg,#16a34a,#15803d)'; setTimeout(()=>{updateAll();},1000);}
 function updateAll(){
- let bal=points*2;
- document.getElementById('balTop').innerText=`MK${bal} | ${points} Pts | Today ${todayCount}/100`;
- document.getElementById('sPoints').innerText=points;
- document.getElementById('sBal').innerText="MK"+bal;
- document.getElementById('sToday').innerText=todayCount+"/100";
+ let bal=points*2; document.getElementById('balTop').innerText=`MK${bal} | ${points} Pts | Today ${todayCount}/100 | Lvl ${Math.floor(points/50)+1} | 🔥${streak}`;
+ document.getElementById('sPoints').innerText=points; document.getElementById('sBal').innerText="MK"+bal; document.getElementById('sToday').innerText=todayCount+"/100";
+ document.getElementById('sLevel').innerText=Math.floor(points/50)+1; document.getElementById('sStreak').innerText=streak+"🔥"; document.getElementById('streakShow').innerText="🔥"+streak;
  document.getElementById('pBar').style.width=(todayCount)+"%";
+ let hour=new Date().getHours(); let greet= hour<12? "🌅 Good Morning" : hour<18? "☀️ Good Afternoon" : "🌙 Good Evening";
+ document.getElementById('greeting').innerText = greet + " " + (myName||"Boss") + "! Level "+(Math.floor(points/50)+1)+" 🚀";
  saveToLeaderboard(); updateLeaderboard();
  if(activated){
   document.getElementById('joinCard').style.display='none'; document.getElementById('pendingCard').style.display='none';
   if(!followed){
    document.getElementById('followCard').style.display='block'; document.getElementById('lockCard').style.display='block'; document.getElementById('quizCard').style.display='none'; document.getElementById('spinCard').style.display='none'; document.getElementById('wdCard').style.display='none';
   } else {
-   document.getElementById('followCard').style.display='none'; document.getElementById('lockCard').style.display='none'; document.getElementById('quizCard').style.display='block'; document.getElementById('wdCard').style.display='block'; document.getElementById('spinCard').style.display='block';
-   checkSpin();
-   if(todayCount>=100){clearInterval(timerInt); timerInt=null; document.getElementById('qTitle').style.display='none';document.getElementById('qOptions').style.display='none';document.getElementById('timerBar').style.display='none';document.getElementById('qTimer').style.display='none';document.getElementById('limitMsg').style.display='block';}
+   document.getElementById('followCard').style.display='none'; document.getElementById('lockCard').style.display='none'; document.getElementById('quizCard').style.display='block'; document.getElementById('wdCard').style.display='block'; document.getElementById('spinCard').style.display='block'; document.getElementById('followDone').style.display='block';
+   checkSpin(); if(todayCount>=100){clearInterval(timerInt);timerInt=null;document.getElementById('qTitle').style.display='none';document.getElementById('qOptions').style.display='none';document.getElementById('timerBar').style.display='none';document.getElementById('limitMsg').style.display='block'; confetti({particleCount:200, spread:100});} else if(!timerInt &&!answered) showQ();
   }
  } else if(pending){
   document.getElementById('joinCard').style.display='none'; document.getElementById('followCard').style.display='none'; document.getElementById('pendingCard').style.display='block'; document.getElementById('pendText').innerText=`Name: ${myName} | Phone: ${myPhone}`;
  } else {
-  document.getElementById('followCard').style.display='block';
+  if(followed){document.getElementById('followCard').style.display='none';} else {document.getElementById('followCard').style.display='block';}
  }
 }
-
-let url=new URLSearchParams(window.location.search); let actPhone=url.get('activate'); let actKey=url.get('key'); if(actPhone && actKey=="FAVOUR500"){localStorage.setItem('activated','yes');localStorage.setItem('myPhone',actPhone);localStorage.setItem('pending','no');myPhone=actPhone;activated=true;pending=false;alert("✅ ACTIVATED! "+actPhone);location.href=location.pathname;}
-function adminTap(){tap++; if(tap>=5){let pin=prompt("PIN:"); if(pin=="0885801081"){document.getElementById('adminBox').style.display='block';} tap=0;} setTimeout(()=>tap=0,2000);}
+let url=new URLSearchParams(window.location.search); let actPhone=url.get('activate'); let actKey=url.get('key'); if(actPhone && actKey=="FAVOUR500"){localStorage.setItem('activated','yes');localStorage.setItem('myPhone',actPhone);localStorage.setItem('pending','no');alert("✅ ACTIVATED! "+actPhone+" 🎉");confetti({particleCount:200});location.href=location.pathname;}
+function adminTap(){tap++; if(tap>=5){let pin=prompt("PIN:"); if(pin=="0885801081"){document.getElementById('adminBox').style.display='block';} tap=0;}}
 function genLink(){let ph=document.getElementById('adminPhone').value; if(ph.length<9)return alert("Enter phone"); let link=`https://mateyufavour-source.github.io/CASH-NET/?activate=${ph}&key=FAVOUR500`; document.getElementById('genLinkOut').innerHTML=`Send to ${ph}:<br>${link}<br><br><button class='btn' style='background:#25D366;color:white' onclick="window.open('https://wa.me/${ph}?text=${encodeURIComponent('✅ Payment confirmed! Activate: '+link)}')">Send WhatsApp</button>`;}
-function doPaidWA(){let nm=document.getElementById('inName').value.trim(); let ph=document.getElementById('inPhone').value.trim(); let tx=document.getElementById('inTx').value.trim(); if(!nm){alert("Enter Name!");return;} if(ph.length<9){alert("Enter Phone!");return;} if(tx.length<3){alert("Enter Tx ID!");return;} localStorage.setItem('myPhone',ph); localStorage.setItem('myName',nm); localStorage.setItem('myTx',tx); localStorage.setItem('pending','yes'); myPhone=ph; myName=nm; pending=true; saveToLeaderboard(); window.location.href=`https://wa.me/265885801081?text=🔔 PAYMENT 🔔%0AName: ${nm}%0APhone: ${ph}%0ATx: ${tx}%0AMK500`; }
+function doPaidWA(){let nm=document.getElementById('inName').value.trim(); let ph=document.getElementById('inPhone').value.trim(); let tx=document.getElementById('inTx').value.trim(); if(!nm){alert("Enter Name!");return;} if(ph.length<9){alert("Enter Phone!");return;} if(tx.length<3){alert("Enter Tx ID!");return;} localStorage.setItem('myPhone',ph); localStorage.setItem('myName',nm); localStorage.setItem('myTx',tx); localStorage.setItem('pending','yes'); saveToLeaderboard(); window.location.href=`https://wa.me/265885801081?text=🔔 PAYMENT 🔔%0AName: ${nm}%0APhone: ${ph}%0ATx: ${tx}%0AMK500`; }
 function openWAgain(){let ph=localStorage.getItem('myPhone'); let tx=localStorage.getItem('myTx'); window.open(`https://wa.me/265885801081?text=🔔 PAYMENT AGAIN Phone:${ph} Tx:${tx}`);}
 function saveToLeaderboard(){if(!myPhone) return; let lb=JSON.parse(localStorage.getItem('LEADERBOARD')||"[]"); if(lb.length<5){lb=[{phone:"0999123456",name:"Blessings Phiri",points:420,today:85},{phone:"0888123456",name:"Grace Banda",points:380,today:72},{phone:"0998234567",name:"Peter Mwale",points:310,today:60},{phone:"0887345678",name:"Chisomo Kaunda",points:250,today:50},{phone:"0996456789",name:"Mike Moyo",points:190,today:40}];} let idx=lb.findIndex(u=>u.phone==myPhone); if(idx>=0){lb[idx].points=points; lb[idx].today=todayPoints; lb[idx].name=myName||myPhone;} else{lb.push({phone:myPhone,name:myName||myPhone,points:points,today:todayPoints});} localStorage.setItem('LEADERBOARD',JSON.stringify(lb));}
 function updateLeaderboard(){let lb=JSON.parse(localStorage.getItem('LEADERBOARD')||"[]"); if(lbMode=='today') lb.sort((a,b)=> (b.today||0)-(a.today||0)); else lb.sort((a,b)=> b.points-a.points); let html=""; let myRank="-"; lb.slice(0,10).forEach((u,i)=>{let isMe=u.phone==myPhone; if(isMe) myRank=i+1; let cls=i==0?'top1':''; if(isMe) cls+=' me'; let score=lbMode=='today'? (u.today||0)+" pts" : u.points+" pts"; html+=`<div class="leader-row ${cls}"><span>${i==0?'🥇':i==1?'🥈':i==2?'🥉':i+1+'.'} ${u.name} - ${u.phone} ${isMe?'(You)':''}</span><span>${score}</span></div>`;}); document.getElementById('leaderList').innerHTML=html; document.getElementById('sRank').innerText=myRank!="-"?"#"+myRank:"-";}
 function showLB(mode){lbMode=mode; document.getElementById('tabToday').className=mode=='today'?'tab active':'tab'; document.getElementById('tabAll').className=mode=='all'?'tab active':'tab'; updateLeaderboard();}
-
-// === FIXED TIMER - STOPS AFTER 10s OR AFTER ANSWER ===
 function showQ(){
- if(todayCount>=100) return;
  clearInterval(timerInt);
- timerInt=null;
- answered=false;
- timeLeft=10;
+ if(todayCount>=100)return;
+ answered=false; timeLeft=10;
  let q=questions[qi%questions.length];
- document.getElementById('qNum').innerText=`Q ${todayCount+1}/100`;
- document.getElementById('qTitle').style.display='block';
- document.getElementById('qOptions').style.display='block';
- document.getElementById('timerBar').style.display='block';
- document.getElementById('qTimer').style.display='inline';
- document.getElementById('qTimer').innerText=timeLeft+"s";
+ document.getElementById('qNum').innerText=`Q ${todayCount+1}/100`; document.getElementById('qTitle').style.display='block'; document.getElementById('qOptions').style.display='block'; document.getElementById('timerBar').style.display='block';
  document.getElementById('qTitle').innerText=q.q;
- document.getElementById('qRes').innerText='';
- document.getElementById('qOptions').innerHTML=q.o.map((o,i)=>`<button class="qbtn" id="btn${i}" onclick="ans(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join("");
- document.getElementById('timerBar').style.width="100%";
- document.getElementById('timerBar').style.background="#16a34a";
-
+ document.getElementById('qOptions').innerHTML=q.o.map((o,i)=>`<button class="qbtn" onclick="ans(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join("");
+ document.getElementById('timerBar').style.width="100%"; document.getElementById('qTimer').innerText=timeLeft+"s";
  timerInt=setInterval(()=>{
   if(answered){clearInterval(timerInt); timerInt=null; return;}
-  timeLeft--;
-  document.getElementById('qTimer').innerText=timeLeft+"s";
-  document.getElementById('timerBar').style.width=(timeLeft*10)+"%";
-  if(timeLeft<=5) document.getElementById('timerBar').style.background="#ef4444";
+  timeLeft--; document.getElementById('qTimer').innerText=timeLeft+"s"; document.getElementById('timerBar').style.width=(timeLeft*10)+"%";
   if(timeLeft<=0){
-   clearInterval(timerInt);
-   timerInt=null;
-   document.getElementById('qRes').innerText='⏰ Time up! 0 pts';
-   document.getElementById('qRes').style.color='#ef4444';
-   todayCount++; qi++;
-   localStorage.setItem('todayCount',todayCount);
-   setTimeout(()=>{updateAll(); if(todayCount<100) showQ();},1000);
+   clearInterval(timerInt); timerInt=null; todayCount++; qi++; streak=0; localStorage.setItem('streak',0);
+   let fb=document.getElementById('feedback'); fb.style.display='block'; fb.innerHTML="⏰ TIME UP!<br><span style='font-size:14px'>Next!</span> 😅";
+   try{wrongSound.play();}catch(e){}
+   setTimeout(()=>{fb.style.display='none';},800);
+   localStorage.setItem('todayCount',todayCount); updateAll(); setTimeout(showQ,900);
   }
  },1000);
 }
-
 function ans(i){
- if(answered) return;
- answered=true;
- clearInterval(timerInt);
- timerInt=null;
- document.getElementById('qTimer').innerText='Stopped';
- document.getElementById('timerBar').style.width='0%';
- document.querySelectorAll('.qbtn').forEach(b=>b.disabled=true);
- let q=questions[qi%questions.length];
- if(i==q.c){
-  points++; todayPoints++;
-  document.getElementById('qRes').innerText='✅ Correct +1 pt - Timer stopped';
-  document.getElementById('qRes').style.color='#16a34a';
-  localStorage.setItem('todayPoints',todayPoints);
- } else {
-  document.getElementById('qRes').innerText='❌ Wrong - Timer stopped';
-  document.getElementById('qRes').style.color='#ef4444';
- }
- todayCount++; qi++;
- localStorage.setItem('points',points);
- localStorage.setItem('todayCount',todayCount);
- setTimeout(()=>{updateAll(); if(todayCount<100) showQ();},1000);
+ if(answered) return; answered=true; clearInterval(timerInt); timerInt=null;
+ document.getElementById('qTimer').innerText="0s"; document.getElementById('timerBar').style.width="0%";
+ let q=questions[qi%questions.length]; let fb=document.getElementById('feedback'); fb.style.display='block';
+ if(i==q.c){ points++; todayPoints++; streak++; localStorage.setItem('streak',streak); try{correctSound.play();}catch(e){} confetti({particleCount:120, spread:80, origin:{y:0.6}});
+  if(streak>=3){ fb.innerHTML=`✅ CORRECT!<br><span style='font-size:16px'>🔥 ${streak} STREAK! +2 MK!</span> 🎉`; } else { fb.innerHTML="✅ CORRECT!<br><span style='font-size:18px'>+2 MK!</span> 🎉"; }
+ } else { streak=0; localStorage.setItem('streak',0); try{wrongSound.play();}catch(e){} fb.innerHTML=`❌ WRONG!<br><span style='font-size:14px'>Ans: ${q.o[q.c]}</span> 😢`; }
+ setTimeout(()=>{fb.style.display='none';},1000);
+ todayCount++; qi++; localStorage.setItem('points',points); localStorage.setItem('todayPoints',todayPoints); localStorage.setItem('todayCount',todayCount);
+ updateAll(); setTimeout(showQ,1100);
 }
-
-function checkSpin(){if(lastSpin===today){document.getElementById('spinBtn').disabled=true;document.getElementById('spinBtn').innerText="Spun Today";document.getElementById('spinBtn').style.opacity="0.5";}}
-function doSpin(){if(lastSpin===today)return; let prizes=[10,20,30,50,20,100]; let win=prizes[Math.floor(Math.random()*prizes.length)]; let deg=Math.floor(Math.random()*360)+720; document.getElementById('wheel').style.transform=`rotate(${deg}deg)`; document.getElementById('spinBtn').disabled=true; setTimeout(()=>{let pts=win/2; points+=pts; todayPoints+=pts; localStorage.setItem('points',points); localStorage.setItem('todayPoints',todayPoints); localStorage.setItem('lastSpin',today); alert(`🎉 Won MK${win}!`); updateAll(); checkSpin();},3100);}
-function doWithdraw(){let num=document.getElementById('wdNum').value; let amt=parseInt(document.getElementById('wdAmt').value); if(!num||!amt)return alert("Fill all"); if(points*2<amt)return alert("No bal"); if(amt<1000)return alert("Min 1000"); window.open(`https://wa.me/265885801081?text=WITHDRAW Phone:${myPhone} Name:${myName} To:${num} Amt:MK${amt}`); points-=amt/2; localStorage.setItem('points',points); updateAll();}
-
+function checkSpin(){if(lastSpin===today){document.getElementById('spinBtn').disabled=true;document.getElementById('spinBtn').innerText="Spun Today ✅";document.getElementById('spinBtn').style.opacity="0.5";}}
+function doSpin(){if(lastSpin===today)return; let prizes=[10,20,30,50,20,100]; let win=prizes[Math.floor(Math.random()*prizes.length)]; let deg=Math.floor(Math.random()*360)+720; document.getElementById('wheel').style.transform=`rotate(${deg}deg)`; document.getElementById('spinBtn').disabled=true; setTimeout(()=>{let pts=win/2; points+=pts; todayPoints+=pts; localStorage.setItem('points',points); localStorage.setItem('todayPoints',todayPoints); localStorage.setItem('lastSpin',today); confetti({particleCount:200, spread:100}); alert(`🎉 Won MK${win}! 🚀`); updateAll(); checkSpin();},3100);}
+function doWithdraw(){let num=document.getElementById('wdNum').value; let amt=parseInt(document.getElementById('wdAmt').value); if(!num||!amt)return alert("Fill all 😊"); if(points*2<amt)return alert("No bal 😢"); if(amt<1000)return alert("Min 1000"); window.open(`https://wa.me/265885801081?text=WITHDRAW Phone:${myPhone} Name:${myName} To:${num} Amt:MK${amt}`); points-=amt/2; localStorage.setItem('points',points); updateAll();}
 updateAll(); showLB('today');
 if(followed){document.getElementById('followDone').style.display='block';}
 </script>
